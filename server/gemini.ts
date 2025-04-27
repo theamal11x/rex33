@@ -9,7 +9,7 @@ export interface GeminiAnalysisResult {
   response: string;
 }
 
-export async function analyzeMessageWithGemini(message: string, conversationContext: string = ''): Promise<GeminiAnalysisResult> {
+export async function analyzeMessageWithGemini(message: string, conversationContext: string = '', mohsinContent: string = ''): Promise<GeminiAnalysisResult> {
   try {
     // Use the gemini-2.0-flash model - updated model name
     const model = genAI.getGenerativeModel({
@@ -36,6 +36,11 @@ export async function analyzeMessageWithGemini(message: string, conversationCont
     // Add conversation context if available
     if (conversationContext) {
       prompt += `\n\nPrevious conversation context:\n${conversationContext}\n`;
+    }
+    
+    // Add Mohsin's content as reference material
+    if (mohsinContent) {
+      prompt += `\n\nREFERENCE MATERIAL FROM MOHSIN'S WRITING:\n${mohsinContent}\n\nUse this content to inform your responses, incorporating Mohsin's thoughts, feelings, and writing style when appropriate.\n`;
     }
 
     prompt += `

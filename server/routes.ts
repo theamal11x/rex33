@@ -213,11 +213,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
         ).join('\n');
       }
       
+      // Fetch relevant content entries to provide as context to Gemini
+      const contentEntries = await storage.getContentEntries();
+      let mohsinContent = '';
+      
+      // Extract content from the database to create Mohsin's knowledge base
+      if (contentEntries.length > 0) {
+        // Limit to 5 most relevant entries to avoid making the prompt too large
+        const relevantEntries = contentEntries.slice(0, 5);
+        mohsinContent = relevantEntries.map(entry => 
+          `TOPIC: ${entry.title}\n${entry.content}`
+        ).join('\n\n');
+      }
+      
       // Import the Gemini integration
       const { analyzeMessageWithGemini } = await import('./gemini');
       
-      // Call Gemini API for response and emotional analysis
-      const geminiResponse = await analyzeMessageWithGemini(message, conversationContext);
+      // Call Gemini API for response and emotional analysis with both conversation history and Mohsin's content
+      const geminiResponse = await analyzeMessageWithGemini(message, conversationContext, mohsinContent);
       
       // Save assistant response
       const savedResponse = await storage.createMessage({

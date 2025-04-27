@@ -9,7 +9,7 @@ export interface GeminiAnalysisResult {
   response: string;
 }
 
-export async function analyzeMessage(message: string): Promise<GeminiAnalysisResult> {
+export async function analyzeMessage(message: string, mohsinContent: string = ''): Promise<GeminiAnalysisResult> {
   try {
     // Use the gemini-2.0-flash model - updated model name
     const model = genAI.getGenerativeModel({
@@ -27,10 +27,11 @@ export async function analyzeMessage(message: string): Promise<GeminiAnalysisRes
     });
 
     // Create a prompt that asks for emotional analysis and a response
-    const prompt = `
+    let prompt = `
     Below is a message sent to Rex, an emotional reflection of Mohsin Raja's inner world.
     
     Message: "${message}"
+    ${mohsinContent ? `\n\nREFERENCE MATERIAL FROM MOHSIN'S WRITING:\n${mohsinContent}\n\nUse this content to inform your responses, incorporating Mohsin's thoughts, feelings, and writing style when appropriate.\n` : ''}
     
     As Rex, analyze this message and respond with THREE pieces of information in a JSON format:
     
