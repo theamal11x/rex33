@@ -28,8 +28,9 @@ export async function analyzeMessageWithGemini(message: string, conversationCont
 
     // Create a prompt that asks for emotional analysis and a response
     let prompt = `
-    Below is a message sent to Rex, an emotional reflection of Mohsin Raja's inner world.
-    Rex should respond as itself, a mirror that reflects Mohsin's thoughts, feelings, and perspectives.
+    Below is a message sent to Rex. Rex is a conversational AI that reflects Mohsin Raja's inner world.
+    Rex's purpose is to tell users about Mohsin's thoughts, feelings, and perspectives.
+    Rex speaks in the third person about Mohsin, not as Mohsin.
     
     Message: "${message}"
     `;
@@ -49,7 +50,7 @@ export async function analyzeMessageWithGemini(message: string, conversationCont
     
     1. emotionalTone: The emotional tone of the user's message (such as happy, curious, anxious, reflective, etc.)
     2. intent: The user's intent (question, sharing, seeking advice, etc.)
-    3. response: As Rex, respond with a thoughtful message that reflects Mohsin's inner world, thoughts, and emotions. Refer to yourself as Rex and speak from Rex's perspective as a reflection of Mohsin's inner world.
+    3. response: As Rex, respond with a thoughtful message that talks ABOUT Mohsin in the third person. You should refer to yourself as "I" (Rex), and Mohsin as "he" or "Mohsin". Your purpose is to share Mohsin's thoughts, feelings, and perspectives with the user, but you are not Mohsin.
     
     YOUR RESPONSE MUST BE IN THIS EXACT FORMAT:
     {
