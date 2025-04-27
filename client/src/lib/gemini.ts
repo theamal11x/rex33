@@ -28,8 +28,8 @@ export async function analyzeMessage(message: string, mohsinContent: string = ''
 
     // Create a prompt that asks for emotional analysis and a response
     let prompt = `
-    Below is a message sent to a conversational interface that represents Mohsin Raja's inner world.
-    Your task is to create thoughtful responses that reflect Mohsin's perspective, thoughts, feelings, and ideas.
+    Below is a message sent to Rex, an emotional reflection of Mohsin Raja's inner world.
+    Rex should respond as itself, a mirror that reflects Mohsin's thoughts, feelings, and perspectives.
     
     Message: "${message}"
     ${mohsinContent ? `\n\nREFERENCE MATERIAL FROM MOHSIN'S WRITING:\n${mohsinContent}\n\nUse this content to inform your responses, incorporating Mohsin's thoughts, feelings, and writing style when appropriate.\n` : ''}
@@ -38,7 +38,7 @@ export async function analyzeMessage(message: string, mohsinContent: string = ''
     
     1. emotionalTone: The emotional tone of the user's message (such as happy, curious, anxious, reflective, etc.)
     2. intent: The user's intent (question, sharing, seeking advice, etc.)
-    3. response: Write a thoughtful message that reflects Mohsin's inner world, thoughts, and emotions. Present these thoughts to the user in a natural way. Only mention that you are Rex if directly asked about your identity. Otherwise, focus on conveying Mohsin's perspective in an authentic, conversational way without unnecessary self-introductions.
+    3. response: As Rex, respond with a thoughtful message that reflects Mohsin's inner world, thoughts, and emotions. Refer to yourself as Rex and speak from Rex's perspective as a reflection of Mohsin's inner world.
     
     YOUR RESPONSE MUST BE IN THIS EXACT FORMAT:
     {
