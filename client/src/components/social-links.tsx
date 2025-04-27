@@ -17,7 +17,7 @@ export function SocialLinks() {
     {
       name: "Twitter",
       url: "https://x.com/theamal11x",
-      icon: <RiTwitterXFill className="w-4 h-4" />,
+      icon: <RiTwitterXFill className="w-3 h-3 sm:w-4 sm:h-4" />,
       color: "hover:text-[#000000] focus:text-[#000000]"
     },
     {
@@ -48,7 +48,7 @@ export function SocialLinks() {
               <Button
                 variant="ghost"
                 size="icon"
-                className={`w-8 h-8 rounded-full ${link.color} transition-colors duration-200`}
+                className={`w-7 h-7 sm:w-8 sm:h-8 rounded-full ${link.color} transition-colors duration-200`}
                 onClick={() => window.open(link.url, '_blank')}
                 aria-label={link.name}
               >

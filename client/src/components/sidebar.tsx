@@ -39,12 +39,12 @@ export function Sidebar() {
   
   return (
     <motion.div 
-      className="lg:w-72 mt-4 lg:mt-0 lg:ml-4 lg:flex-shrink-0"
+      className="w-full lg:w-72 mb-3 lg:mb-0 lg:ml-4 lg:flex-shrink-0"
       initial={{ opacity: 0, x: 20 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.5, delay: 0.7 }}
     >
-      <div className="sticky top-4 space-y-4">
+      <div className="lg:sticky lg:top-4 space-y-4">
         {/* About Rex */}
         <motion.div
           initial={{ y: 20, opacity: 0 }}
