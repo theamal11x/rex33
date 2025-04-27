@@ -1,7 +1,7 @@
 import { useRef, useEffect, useState } from 'react';
 import { useApp } from '@/context/app-context';
 import { MessageInput } from '@/components/ui/message-input';
-import { MessageDisplay, TypingIndicator } from '@/components/ui/message-display';
+import { MinimalMessageDisplay, MinimalTypingIndicator } from '@/components/ui/minimal-message-display';
 import { motion, AnimatePresence } from 'framer-motion';
 import { SocialLinks } from '@/components/social-links';
 import { MessageSquareIcon, HeartIcon, SparklesIcon, CornerDownLeftIcon, Sparkles } from 'lucide-react';
