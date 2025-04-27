@@ -1,10 +1,16 @@
 import { useApp } from '@/context/app-context';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { BookIcon, MessageSquareIcon } from 'lucide-react';
+import { BookIcon, MessageSquareIcon, FolderIcon } from 'lucide-react';
 
 export function Sidebar() {
-  const { setView, startNewConversation } = useApp();
+  const { 
+    setView, 
+    startNewConversation, 
+    categories, 
+    selectedCategoryId, 
+    setSelectedCategoryId 
+  } = useApp();
   
   const handleViewArchive = () => {
     setView('archive');
@@ -12,6 +18,11 @@ export function Sidebar() {
   
   const handleStartNewConversation = () => {
     startNewConversation();
+  };
+  
+  const handleCategoryClick = (categoryId: number) => {
+    setView('archive');
+    setSelectedCategoryId(categoryId);
   };
   
   const suggestedTopics = [
@@ -67,6 +78,30 @@ export function Sidebar() {
             </Button>
           </CardContent>
         </Card>
+        
+        {/* Categories */}
+        {categories && categories.length > 0 && (
+          <Card className="border border-amber-500/10 shadow-sm">
+            <CardHeader className="bg-gradient-to-r from-amber-100/50 to-cream pb-2 pt-4">
+              <CardTitle className="text-base font-medium">Content Categories</CardTitle>
+            </CardHeader>
+            <CardContent className="p-3">
+              {categories.map((category) => (
+                <Button
+                  key={category.id}
+                  variant="ghost"
+                  className={`w-full justify-start text-sm hover:bg-amber-100/30 h-auto py-2 px-3 mb-1 font-normal ${
+                    selectedCategoryId === category.id ? 'bg-amber-100/70 text-amber-900' : ''
+                  }`}
+                  onClick={() => handleCategoryClick(category.id)}
+                >
+                  <FolderIcon className="h-4 w-4 mr-2 text-amber-500 flex-shrink-0" />
+                  <span className="truncate">{category.name}</span>
+                </Button>
+              ))}
+            </CardContent>
+          </Card>
+        )}
         
         {/* Suggested Topics */}
         <Card className="border border-amber-500/10 shadow-sm">

@@ -103,12 +103,25 @@ export function ArchiveView() {
               
               {/* Recent Entries */}
               <div>
-                <h3 className="text-lg font-medium mb-4 border-b border-amber-500/20 pb-2">
-                  {selectedCategoryId 
-                    ? `Entries in ${categories.find(c => c.id === selectedCategoryId)?.name || 'Category'}`
-                    : 'Recent Reflections'
-                  }
-                </h3>
+                <div className="flex justify-between items-center mb-4 border-b border-amber-500/20 pb-2">
+                  <h3 className="text-lg font-medium">
+                    {selectedCategoryId 
+                      ? `Entries in ${categories.find(c => c.id === selectedCategoryId)?.name || 'Category'}`
+                      : 'Recent Reflections'
+                    }
+                  </h3>
+                  
+                  {selectedCategoryId && (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="text-amber-600 hover:text-amber-700"
+                      onClick={() => setSelectedCategoryId(null)}
+                    >
+                      Clear filter
+                    </Button>
+                  )}
+                </div>
                 
                 <div className="space-y-4">
                   {contentEntries
