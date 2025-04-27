@@ -25,9 +25,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
   
   // Admin check middleware
   const requireAdmin = (req: Request, res: Response, next: () => void) => {
-    if (!req.isAuthenticated() || !req.user?.isAdmin) {
+    console.log("Admin check - Auth status:", req.isAuthenticated());
+    console.log("Admin check - User:", req.user);
+    
+    if (!req.isAuthenticated()) {
+      return res.status(401).json({ message: 'Authentication required' });
+    }
+    
+    if (!req.user?.isAdmin) {
       return res.status(403).json({ message: 'Admin access required' });
     }
+    
     next();
   };
   
