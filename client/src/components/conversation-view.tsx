@@ -254,7 +254,7 @@ export function ConversationView() {
                   delay: Math.min(0.1 * index, 0.5) 
                 }}
               >
-                <MessageDisplay message={message} />
+                <MinimalMessageDisplay message={message} />
               </motion.div>
             ))}
           </AnimatePresence>
@@ -268,7 +268,7 @@ export function ConversationView() {
                 exit={{ opacity: 0, y: -10 }}
                 transition={{ duration: 0.3 }}
               >
-                <TypingIndicator />
+                <MinimalTypingIndicator />
               </motion.div>
             )}
           </AnimatePresence>

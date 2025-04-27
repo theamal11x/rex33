@@ -1,5 +1,4 @@
 import { Message } from '@shared/schema';
-import { MessageRoleEnum } from 'shared/schema';
 import { cn } from '@/lib/utils';
 import { User, Sparkles } from 'lucide-react';
 import { motion } from 'framer-motion';
@@ -9,7 +8,7 @@ interface MessageDisplayProps {
 }
 
 export function MinimalMessageDisplay({ message }: MessageDisplayProps) {
-  const isUser = message.role === MessageRoleEnum.user;
+  const isUser = message.role === 'user';
   
   return (
     <motion.div 
