@@ -267,6 +267,34 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ message: 'Failed to fetch messages' });
     }
   });
+  
+  // New endpoint to get emotional journey data
+  app.get('/api/conversation/:sessionId/emotional-journey', async (req, res) => {
+    try {
+      const { sessionId } = req.params;
+      const conversation = await storage.getConversationBySessionId(sessionId);
+      
+      if (!conversation) {
+        return res.json([]);
+      }
+      
+      const messages = await storage.getMessages(conversation.id);
+      
+      // Filter messages that have emotional tone data (usually assistant messages)
+      const emotionalData = messages
+        .filter(msg => msg.emotionalTone) // Only include messages with emotional tone
+        .map(msg => ({
+          timestamp: msg.createdAt,
+          emotion: msg.emotionalTone,
+          role: msg.role,
+          id: msg.id
+        }));
+      
+      res.json(emotionalData);
+    } catch (error) {
+      res.status(500).json({ message: 'Failed to fetch emotional journey data' });
+    }
+  });
 
   const httpServer = createServer(app);
   return httpServer;

@@ -1,14 +1,18 @@
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import { useApp } from '@/context/app-context';
 import { MessageInput } from '@/components/ui/message-input';
 import { MessageDisplay, TypingIndicator } from '@/components/ui/message-display';
 import { motion } from 'framer-motion';
 import { SocialLinks } from '@/components/social-links';
-import { MessageSquareIcon, HeartIcon, SparklesIcon } from 'lucide-react';
+import { MessageSquareIcon, HeartIcon, SparklesIcon, LineChartIcon } from 'lucide-react';
+import { EmotionalJourney } from '@/components/emotional-journey';
+import { Button } from '@/components/ui/button';
+import { Separator } from '@/components/ui/separator';
 
 export function ConversationView() {
-  const { messages, sendMessage, isTyping } = useApp();
+  const { messages, sendMessage, isTyping, sessionId } = useApp();
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const [showJourney, setShowJourney] = useState(false);
   
   // Auto-scroll to bottom when messages change
   useEffect(() => {
@@ -35,17 +39,61 @@ export function ConversationView() {
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.2 }}
         >
-          <div className="flex items-center gap-2 mb-1">
-            <HeartIcon className="h-4 sm:h-5 w-4 sm:w-5 text-amber-500" />
-            <h2 className="text-lg sm:text-xl font-medium text-amber-900">Welcome to Rex</h2>
-          </div>
-          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 sm:gap-0">
-            <p className="text-slate-700/80 text-xs sm:text-sm">Mohsin's emotional mirror and personal reflection space</p>
-            <div className="sm:ml-auto">
-              <SocialLinks />
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="flex items-center gap-2 mb-1">
+                <HeartIcon className="h-4 sm:h-5 w-4 sm:w-5 text-amber-500" />
+                <h2 className="text-lg sm:text-xl font-medium text-amber-900">Welcome to Rex</h2>
+              </div>
+              <p className="text-slate-700/80 text-xs sm:text-sm">Mohsin's emotional mirror and personal reflection space</p>
+            </div>
+            
+            <div className="flex items-center gap-2">
+              {messages.length > 1 && (
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="text-xs hidden sm:flex items-center gap-1"
+                  onClick={() => setShowJourney(!showJourney)}
+                >
+                  <LineChartIcon className="h-3 w-3" />
+                  {showJourney ? 'Hide' : 'Show'} Emotional Journey
+                </Button>
+              )}
+              <div className="sm:ml-auto">
+                <SocialLinks />
+              </div>
             </div>
           </div>
+          
+          {/* Mobile emotional journey button */}
+          {messages.length > 1 && (
+            <div className="mt-2 flex sm:hidden">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="text-xs w-full flex items-center justify-center gap-1"
+                onClick={() => setShowJourney(!showJourney)}
+              >
+                <LineChartIcon className="h-3 w-3" />
+                {showJourney ? 'Hide' : 'Show'} Emotional Journey
+              </Button>
+            </div>
+          )}
         </motion.div>
+        
+        {/* Emotional Journey Visualization */}
+        {showJourney && messages.length > 0 && (
+          <motion.div
+            className="p-3 sm:p-4 border-b border-amber-200 bg-amber-50/50"
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            <EmotionalJourney sessionId={sessionId} />
+          </motion.div>
+        )}
         
         {/* Conversation Area */}
         <motion.div 
