@@ -1,141 +1,492 @@
 import { Message } from '@shared/schema';
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
-import { BrainCog, Heart, MessageCircle } from 'lucide-react';
+import { BrainCog, Heart, Sparkles, MessageCircle } from 'lucide-react';
 import { Badge } from './badge';
 
 interface MessageDisplayProps {
   message: Message;
 }
 
-// Emotion color mapping for visual cues
-const emotionColors: Record<string, string> = {
+// Emotion color mapping with more vibrant, premium styling
+const emotionColors: Record<string, { bg: string, text: string, border: string, glow: string }> = {
   // Positive emotions - green spectrum
-  happy: 'bg-green-100 text-green-800',
-  joyful: 'bg-green-100 text-green-800',
-  excited: 'bg-green-100 text-green-800',
-  content: 'bg-green-100 text-green-800',
-  enthusiastic: 'bg-green-100 text-green-800',
-  optimistic: 'bg-green-100 text-green-800',
-  grateful: 'bg-green-200 text-green-800',
-  peaceful: 'bg-green-100 text-green-800',
+  happy: { 
+    bg: 'bg-gradient-to-r from-green-50 to-emerald-50', 
+    text: 'text-emerald-700',
+    border: 'border-emerald-200',
+    glow: 'shadow-[0_0_12px_rgba(16,185,129,0.15)]'
+  },
+  joyful: { 
+    bg: 'bg-gradient-to-r from-green-50 to-emerald-50', 
+    text: 'text-emerald-700',
+    border: 'border-emerald-200',
+    glow: 'shadow-[0_0_12px_rgba(16,185,129,0.15)]'
+  },
+  excited: { 
+    bg: 'bg-gradient-to-r from-green-50 to-lime-50', 
+    text: 'text-green-700',
+    border: 'border-green-200',
+    glow: 'shadow-[0_0_12px_rgba(34,197,94,0.15)]'
+  },
+  content: { 
+    bg: 'bg-gradient-to-r from-green-50 to-teal-50', 
+    text: 'text-teal-700',
+    border: 'border-teal-200',
+    glow: 'shadow-[0_0_12px_rgba(20,184,166,0.15)]'
+  },
+  enthusiastic: { 
+    bg: 'bg-gradient-to-r from-lime-50 to-green-50', 
+    text: 'text-lime-700',
+    border: 'border-lime-200',
+    glow: 'shadow-[0_0_12px_rgba(132,204,22,0.15)]'
+  },
+  optimistic: { 
+    bg: 'bg-gradient-to-r from-emerald-50 to-green-50', 
+    text: 'text-emerald-700',
+    border: 'border-emerald-200',
+    glow: 'shadow-[0_0_12px_rgba(16,185,129,0.15)]'
+  },
+  grateful: { 
+    bg: 'bg-gradient-to-r from-teal-50 to-emerald-50', 
+    text: 'text-teal-700',
+    border: 'border-teal-200',
+    glow: 'shadow-[0_0_12px_rgba(20,184,166,0.15)]'
+  },
+  peaceful: { 
+    bg: 'bg-gradient-to-r from-teal-50 to-cyan-50', 
+    text: 'text-teal-700',
+    border: 'border-teal-200',
+    glow: 'shadow-[0_0_12px_rgba(20,184,166,0.15)]'
+  },
   
   // Reflective emotions - blue spectrum
-  sad: 'bg-blue-100 text-blue-800',
-  melancholic: 'bg-blue-100 text-blue-800',
-  reflective: 'bg-blue-100 text-blue-800',
-  contemplative: 'bg-blue-100 text-blue-800',
-  thoughtful: 'bg-blue-100 text-blue-800',
-  nostalgic: 'bg-blue-100 text-blue-800',
+  sad: { 
+    bg: 'bg-gradient-to-r from-blue-50 to-indigo-50', 
+    text: 'text-blue-700',
+    border: 'border-blue-200',
+    glow: 'shadow-[0_0_12px_rgba(59,130,246,0.15)]'
+  },
+  melancholic: { 
+    bg: 'bg-gradient-to-r from-blue-50 to-violet-50', 
+    text: 'text-blue-700',
+    border: 'border-blue-200',
+    glow: 'shadow-[0_0_12px_rgba(59,130,246,0.15)]'
+  },
+  reflective: { 
+    bg: 'bg-gradient-to-r from-cyan-50 to-blue-50', 
+    text: 'text-cyan-700',
+    border: 'border-cyan-200',
+    glow: 'shadow-[0_0_12px_rgba(6,182,212,0.15)]'
+  },
+  contemplative: { 
+    bg: 'bg-gradient-to-r from-blue-50 to-sky-50', 
+    text: 'text-blue-700',
+    border: 'border-blue-200',
+    glow: 'shadow-[0_0_12px_rgba(59,130,246,0.15)]'
+  },
+  thoughtful: { 
+    bg: 'bg-gradient-to-r from-indigo-50 to-blue-50', 
+    text: 'text-indigo-700',
+    border: 'border-indigo-200',
+    glow: 'shadow-[0_0_12px_rgba(99,102,241,0.15)]'
+  },
+  nostalgic: { 
+    bg: 'bg-gradient-to-r from-violet-50 to-blue-50', 
+    text: 'text-violet-700',
+    border: 'border-violet-200',
+    glow: 'shadow-[0_0_12px_rgba(139,92,246,0.15)]'
+  },
   
   // Anxious emotions - yellow spectrum
-  anxious: 'bg-yellow-100 text-yellow-800',
-  worried: 'bg-yellow-100 text-yellow-800',
-  nervous: 'bg-yellow-100 text-yellow-800',
-  apprehensive: 'bg-yellow-100 text-yellow-800',
-  uncertain: 'bg-yellow-100 text-yellow-800',
+  anxious: { 
+    bg: 'bg-gradient-to-r from-yellow-50 to-amber-50', 
+    text: 'text-yellow-700',
+    border: 'border-yellow-200',
+    glow: 'shadow-[0_0_12px_rgba(234,179,8,0.15)]'
+  },
+  worried: { 
+    bg: 'bg-gradient-to-r from-amber-50 to-yellow-50', 
+    text: 'text-amber-700',
+    border: 'border-amber-200',
+    glow: 'shadow-[0_0_12px_rgba(245,158,11,0.15)]'
+  },
+  nervous: { 
+    bg: 'bg-gradient-to-r from-yellow-50 to-lime-50', 
+    text: 'text-yellow-700',
+    border: 'border-yellow-200',
+    glow: 'shadow-[0_0_12px_rgba(234,179,8,0.15)]'
+  },
+  apprehensive: { 
+    bg: 'bg-gradient-to-r from-amber-50 to-orange-50', 
+    text: 'text-amber-700',
+    border: 'border-amber-200',
+    glow: 'shadow-[0_0_12px_rgba(245,158,11,0.15)]'
+  },
+  uncertain: { 
+    bg: 'bg-gradient-to-r from-orange-50 to-amber-50', 
+    text: 'text-orange-700',
+    border: 'border-orange-200',
+    glow: 'shadow-[0_0_12px_rgba(249,115,22,0.15)]'
+  },
   
   // Curious emotions - purple spectrum
-  curious: 'bg-purple-100 text-purple-800',
-  inquisitive: 'bg-purple-100 text-purple-800',
-  interested: 'bg-purple-100 text-purple-800',
-  intrigued: 'bg-purple-100 text-purple-800',
-  fascinated: 'bg-purple-100 text-purple-800',
+  curious: { 
+    bg: 'bg-gradient-to-r from-purple-50 to-fuchsia-50', 
+    text: 'text-purple-700',
+    border: 'border-purple-200',
+    glow: 'shadow-[0_0_12px_rgba(168,85,247,0.15)]'
+  },
+  inquisitive: { 
+    bg: 'bg-gradient-to-r from-violet-50 to-purple-50', 
+    text: 'text-violet-700',
+    border: 'border-violet-200',
+    glow: 'shadow-[0_0_12px_rgba(139,92,246,0.15)]'
+  },
+  interested: { 
+    bg: 'bg-gradient-to-r from-fuchsia-50 to-purple-50', 
+    text: 'text-fuchsia-700',
+    border: 'border-fuchsia-200',
+    glow: 'shadow-[0_0_12px_rgba(217,70,239,0.15)]'
+  },
+  intrigued: { 
+    bg: 'bg-gradient-to-r from-purple-50 to-violet-50', 
+    text: 'text-purple-700',
+    border: 'border-purple-200',
+    glow: 'shadow-[0_0_12px_rgba(168,85,247,0.15)]'
+  },
+  fascinated: { 
+    bg: 'bg-gradient-to-r from-indigo-50 to-violet-50', 
+    text: 'text-indigo-700',
+    border: 'border-indigo-200',
+    glow: 'shadow-[0_0_12px_rgba(99,102,241,0.15)]'
+  },
   
   // Neutral emotions - slate spectrum
-  neutral: 'bg-slate-100 text-slate-800',
-  calm: 'bg-slate-100 text-slate-800',
+  neutral: { 
+    bg: 'bg-gradient-to-r from-slate-50 to-gray-50', 
+    text: 'text-slate-700',
+    border: 'border-slate-200',
+    glow: 'shadow-[0_0_12px_rgba(100,116,139,0.15)]'
+  },
+  calm: { 
+    bg: 'bg-gradient-to-r from-gray-50 to-slate-50', 
+    text: 'text-gray-700',
+    border: 'border-gray-200',
+    glow: 'shadow-[0_0_12px_rgba(107,114,128,0.15)]'
+  },
   
   // Negative emotions - red spectrum
-  angry: 'bg-red-100 text-red-800',
-  frustrated: 'bg-red-100 text-red-800',
-  upset: 'bg-red-100 text-red-800',
-  irritated: 'bg-red-100 text-red-800',
+  angry: { 
+    bg: 'bg-gradient-to-r from-red-50 to-rose-50', 
+    text: 'text-red-700',
+    border: 'border-red-200',
+    glow: 'shadow-[0_0_12px_rgba(239,68,68,0.15)]'
+  },
+  frustrated: { 
+    bg: 'bg-gradient-to-r from-rose-50 to-red-50', 
+    text: 'text-rose-700',
+    border: 'border-rose-200',
+    glow: 'shadow-[0_0_12px_rgba(225,29,72,0.15)]'
+  },
+  upset: { 
+    bg: 'bg-gradient-to-r from-red-50 to-pink-50', 
+    text: 'text-red-700',
+    border: 'border-red-200',
+    glow: 'shadow-[0_0_12px_rgba(239,68,68,0.15)]'
+  },
+  irritated: { 
+    bg: 'bg-gradient-to-r from-orange-50 to-red-50', 
+    text: 'text-orange-700',
+    border: 'border-orange-200',
+    glow: 'shadow-[0_0_12px_rgba(249,115,22,0.15)]'
+  },
   
   // Warm emotions - amber/orange spectrum
-  warm: 'bg-amber-100 text-amber-800',
-  friendly: 'bg-amber-100 text-amber-800',
-  welcoming: 'bg-amber-100 text-amber-800',
+  warm: { 
+    bg: 'bg-gradient-to-r from-amber-50 to-orange-50', 
+    text: 'text-amber-700',
+    border: 'border-amber-200',
+    glow: 'shadow-[0_0_12px_rgba(245,158,11,0.15)]'
+  },
+  friendly: { 
+    bg: 'bg-gradient-to-r from-orange-50 to-amber-50', 
+    text: 'text-orange-700',
+    border: 'border-orange-200',
+    glow: 'shadow-[0_0_12px_rgba(249,115,22,0.15)]'
+  },
+  welcoming: { 
+    bg: 'bg-gradient-to-r from-amber-50 to-yellow-50', 
+    text: 'text-amber-700',
+    border: 'border-amber-200',
+    glow: 'shadow-[0_0_12px_rgba(245,158,11,0.15)]'
+  },
   
   // Default
-  default: 'bg-amber-100 text-amber-800'
+  default: { 
+    bg: 'bg-gradient-to-r from-amber-50 to-orange-50', 
+    text: 'text-amber-700',
+    border: 'border-amber-200',
+    glow: 'shadow-[0_0_12px_rgba(245,158,11,0.15)]'
+  }
 };
 
-// Intent color mapping
-const intentColors: Record<string, string> = {
+// Intent color mapping with premium styling
+const intentColors: Record<string, { bg: string, text: string, border: string, glow: string }> = {
   // Questions and inquiries
-  question: 'bg-blue-100 text-blue-800',
-  inquiry: 'bg-blue-100 text-blue-800',
-  asking: 'bg-blue-100 text-blue-800',
-  curious: 'bg-blue-100 text-blue-800',
-  confused: 'bg-blue-100 text-blue-800',
-  clarification: 'bg-blue-100 text-blue-800',
+  question: { 
+    bg: 'bg-gradient-to-r from-blue-50 to-sky-50', 
+    text: 'text-blue-700',
+    border: 'border-blue-200',
+    glow: 'shadow-[0_0_12px_rgba(59,130,246,0.15)]'
+  },
+  inquiry: { 
+    bg: 'bg-gradient-to-r from-sky-50 to-blue-50', 
+    text: 'text-sky-700',
+    border: 'border-sky-200',
+    glow: 'shadow-[0_0_12px_rgba(14,165,233,0.15)]'
+  },
+  asking: { 
+    bg: 'bg-gradient-to-r from-indigo-50 to-blue-50', 
+    text: 'text-indigo-700',
+    border: 'border-indigo-200',
+    glow: 'shadow-[0_0_12px_rgba(99,102,241,0.15)]'
+  },
+  curious: { 
+    bg: 'bg-gradient-to-r from-violet-50 to-indigo-50', 
+    text: 'text-violet-700',
+    border: 'border-violet-200',
+    glow: 'shadow-[0_0_12px_rgba(139,92,246,0.15)]'
+  },
+  confused: { 
+    bg: 'bg-gradient-to-r from-purple-50 to-violet-50', 
+    text: 'text-purple-700',
+    border: 'border-purple-200',
+    glow: 'shadow-[0_0_12px_rgba(168,85,247,0.15)]'
+  },
+  clarification: { 
+    bg: 'bg-gradient-to-r from-cyan-50 to-blue-50', 
+    text: 'text-cyan-700',
+    border: 'border-cyan-200',
+    glow: 'shadow-[0_0_12px_rgba(6,182,212,0.15)]'
+  },
   
   // Sharing and statements
-  sharing: 'bg-green-100 text-green-800',
-  statement: 'bg-green-100 text-green-800',
-  expression: 'bg-green-100 text-green-800',
-  personal: 'bg-green-100 text-green-800',
-  reflective: 'bg-green-100 text-green-800',
-  update: 'bg-green-100 text-green-800',
+  sharing: { 
+    bg: 'bg-gradient-to-r from-green-50 to-emerald-50', 
+    text: 'text-green-700',
+    border: 'border-green-200',
+    glow: 'shadow-[0_0_12px_rgba(34,197,94,0.15)]'
+  },
+  statement: { 
+    bg: 'bg-gradient-to-r from-emerald-50 to-teal-50', 
+    text: 'text-emerald-700',
+    border: 'border-emerald-200',
+    glow: 'shadow-[0_0_12px_rgba(16,185,129,0.15)]'
+  },
+  expression: { 
+    bg: 'bg-gradient-to-r from-teal-50 to-green-50', 
+    text: 'text-teal-700',
+    border: 'border-teal-200',
+    glow: 'shadow-[0_0_12px_rgba(20,184,166,0.15)]'
+  },
+  personal: { 
+    bg: 'bg-gradient-to-r from-lime-50 to-green-50', 
+    text: 'text-lime-700',
+    border: 'border-lime-200',
+    glow: 'shadow-[0_0_12px_rgba(132,204,22,0.15)]'
+  },
+  reflective: { 
+    bg: 'bg-gradient-to-r from-cyan-50 to-teal-50', 
+    text: 'text-cyan-700',
+    border: 'border-cyan-200',
+    glow: 'shadow-[0_0_12px_rgba(6,182,212,0.15)]'
+  },
+  update: { 
+    bg: 'bg-gradient-to-r from-green-50 to-lime-50', 
+    text: 'text-green-700',
+    border: 'border-green-200',
+    glow: 'shadow-[0_0_12px_rgba(34,197,94,0.15)]'
+  },
   
   // Seeking guidance
-  advice: 'bg-purple-100 text-purple-800',
-  guidance: 'bg-purple-100 text-purple-800',
-  help: 'bg-purple-100 text-purple-800',
-  suggestion: 'bg-purple-100 text-purple-800',
-  recommendation: 'bg-purple-100 text-purple-800',
+  advice: { 
+    bg: 'bg-gradient-to-r from-purple-50 to-violet-50', 
+    text: 'text-purple-700',
+    border: 'border-purple-200',
+    glow: 'shadow-[0_0_12px_rgba(168,85,247,0.15)]'
+  },
+  guidance: { 
+    bg: 'bg-gradient-to-r from-violet-50 to-purple-50', 
+    text: 'text-violet-700',
+    border: 'border-violet-200',
+    glow: 'shadow-[0_0_12px_rgba(139,92,246,0.15)]'
+  },
+  help: { 
+    bg: 'bg-gradient-to-r from-fuchsia-50 to-purple-50', 
+    text: 'text-fuchsia-700',
+    border: 'border-fuchsia-200',
+    glow: 'shadow-[0_0_12px_rgba(217,70,239,0.15)]'
+  },
+  suggestion: { 
+    bg: 'bg-gradient-to-r from-indigo-50 to-purple-50', 
+    text: 'text-indigo-700',
+    border: 'border-indigo-200',
+    glow: 'shadow-[0_0_12px_rgba(99,102,241,0.15)]'
+  },
+  recommendation: { 
+    bg: 'bg-gradient-to-r from-purple-50 to-fuchsia-50', 
+    text: 'text-purple-700',
+    border: 'border-purple-200',
+    glow: 'shadow-[0_0_12px_rgba(168,85,247,0.15)]'
+  },
   
   // Responses and reactions
-  responding: 'bg-amber-100 text-amber-800',
-  reaction: 'bg-amber-100 text-amber-800',
-  reply: 'bg-amber-100 text-amber-800',
-  acknowledgment: 'bg-amber-100 text-amber-800',
-  feedback: 'bg-amber-100 text-amber-800',
+  responding: { 
+    bg: 'bg-gradient-to-r from-amber-50 to-orange-50', 
+    text: 'text-amber-700',
+    border: 'border-amber-200',
+    glow: 'shadow-[0_0_12px_rgba(245,158,11,0.15)]'
+  },
+  reaction: { 
+    bg: 'bg-gradient-to-r from-orange-50 to-amber-50', 
+    text: 'text-orange-700',
+    border: 'border-orange-200',
+    glow: 'shadow-[0_0_12px_rgba(249,115,22,0.15)]'
+  },
+  reply: { 
+    bg: 'bg-gradient-to-r from-yellow-50 to-amber-50', 
+    text: 'text-yellow-700',
+    border: 'border-yellow-200',
+    glow: 'shadow-[0_0_12px_rgba(234,179,8,0.15)]'
+  },
+  acknowledgment: { 
+    bg: 'bg-gradient-to-r from-amber-50 to-yellow-50', 
+    text: 'text-amber-700',
+    border: 'border-amber-200',
+    glow: 'shadow-[0_0_12px_rgba(245,158,11,0.15)]'
+  },
+  feedback: { 
+    bg: 'bg-gradient-to-r from-orange-50 to-red-50', 
+    text: 'text-orange-700',
+    border: 'border-orange-200',
+    glow: 'shadow-[0_0_12px_rgba(249,115,22,0.15)]'
+  },
   
   // Greetings and social
-  greeting: 'bg-teal-100 text-teal-800',
-  farewell: 'bg-teal-100 text-teal-800',
-  social: 'bg-teal-100 text-teal-800',
-  pleasantry: 'bg-teal-100 text-teal-800',
+  greeting: { 
+    bg: 'bg-gradient-to-r from-teal-50 to-cyan-50', 
+    text: 'text-teal-700',
+    border: 'border-teal-200',
+    glow: 'shadow-[0_0_12px_rgba(20,184,166,0.15)]'
+  },
+  farewell: { 
+    bg: 'bg-gradient-to-r from-cyan-50 to-teal-50', 
+    text: 'text-cyan-700',
+    border: 'border-cyan-200',
+    glow: 'shadow-[0_0_12px_rgba(6,182,212,0.15)]'
+  },
+  social: { 
+    bg: 'bg-gradient-to-r from-emerald-50 to-teal-50', 
+    text: 'text-emerald-700',
+    border: 'border-emerald-200',
+    glow: 'shadow-[0_0_12px_rgba(16,185,129,0.15)]'
+  },
+  pleasantry: { 
+    bg: 'bg-gradient-to-r from-teal-50 to-emerald-50', 
+    text: 'text-teal-700',
+    border: 'border-teal-200',
+    glow: 'shadow-[0_0_12px_rgba(20,184,166,0.15)]'
+  },
   
   // Testing or connection checking
-  testing: 'bg-slate-100 text-slate-700',
-  checking: 'bg-slate-100 text-slate-700',
-  connection: 'bg-slate-100 text-slate-700',
+  testing: { 
+    bg: 'bg-gradient-to-r from-gray-50 to-slate-50', 
+    text: 'text-gray-700',
+    border: 'border-gray-200',
+    glow: 'shadow-[0_0_12px_rgba(107,114,128,0.15)]'
+  },
+  checking: { 
+    bg: 'bg-gradient-to-r from-slate-50 to-gray-50', 
+    text: 'text-slate-700',
+    border: 'border-slate-200',
+    glow: 'shadow-[0_0_12px_rgba(100,116,139,0.15)]'
+  },
+  connection: { 
+    bg: 'bg-gradient-to-r from-zinc-50 to-slate-50', 
+    text: 'text-zinc-700',
+    border: 'border-zinc-200',
+    glow: 'shadow-[0_0_12px_rgba(113,113,122,0.15)]'
+  },
   
   // Default
-  default: 'bg-slate-100 text-slate-800'
+  default: { 
+    bg: 'bg-gradient-to-r from-slate-50 to-gray-50', 
+    text: 'text-slate-700',
+    border: 'border-slate-200',
+    glow: 'shadow-[0_0_12px_rgba(100,116,139,0.15)]'
+  }
 };
 
 export function MessageDisplay({ message }: MessageDisplayProps) {
   const isUser = message.role === 'user';
   
   // Determine appropriate colors based on detected emotions
-  const emotionColor = message.emotionalTone ? 
+  const emotionStyle = message.emotionalTone ? 
     (emotionColors[message.emotionalTone.toLowerCase()] || emotionColors.default) : 
     emotionColors.default;
     
-  const intentColor = message.intent ? 
+  const intentStyle = message.intent ? 
     (intentColors[message.intent.toLowerCase()] || intentColors.default) : 
     intentColors.default;
+  
+  // Animation variants
+  const messageVariants = {
+    hidden: { opacity: 0, y: 20, scale: 0.95 },
+    visible: { 
+      opacity: 1, 
+      y: 0, 
+      scale: 1,
+      transition: { 
+        type: "spring",
+        stiffness: 500,
+        damping: 30
+      }
+    }
+  };
+  
+  const badgeVariants = {
+    hidden: { opacity: 0, scale: 0.8 },
+    visible: { 
+      opacity: 1, 
+      scale: 1,
+      transition: { 
+        delay: 0.2,
+        duration: 0.3,
+        type: "spring",
+        stiffness: 500
+      }
+    }
+  };
   
   return (
     <motion.div 
       className={cn(
-        "flex items-start gap-3",
+        "flex items-start gap-3 my-6",
         isUser && "justify-end flex-row-reverse"
       )}
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3 }}
+      variants={messageVariants}
+      initial="hidden"
+      animate="visible"
     >
-      <div 
+      {/* Avatar */}
+      <motion.div
+        whileHover={{ scale: 1.05 }}
         className={cn(
-          "flex-shrink-0 rounded-full flex items-center justify-center shadow-md",
+          "flex-shrink-0 rounded-full flex items-center justify-center shadow-md relative",
           isUser 
-            ? "w-8 h-8 bg-gradient-to-br from-secondary to-blue-400" 
-            : "w-10 h-10 bg-gradient-to-br from-primary to-orange-400"
+            ? "w-9 h-9 bg-gradient-to-br from-secondary to-blue-400 shadow-[0_0_15px_rgba(59,130,246,0.3)]" 
+            : "w-11 h-11 bg-gradient-to-br from-primary to-orange-400 shadow-[0_0_15px_rgba(245,158,11,0.3)]"
         )}
       >
         {isUser ? (
@@ -143,37 +494,113 @@ export function MessageDisplay({ message }: MessageDisplayProps) {
         ) : (
           <span className="text-white font-display text-lg font-bold">R</span>
         )}
-      </div>
+        
+        {/* Animated glow effect */}
+        <motion.div 
+          className={cn(
+            "absolute inset-0 rounded-full",
+            isUser ? "bg-secondary" : "bg-primary"
+          )}
+          animate={{ 
+            opacity: [0, 0.2, 0],
+            scale: [1, 1.4, 1]
+          }}
+          transition={{ 
+            duration: 3,
+            repeat: Infinity,
+            repeatDelay: Math.random() * 5 + 5, // Random delay for organic feel
+          }}
+        />
+      </motion.div>
       
+      {/* Message bubble */}
       <div 
         className={cn(
-          "p-4 rounded-xl max-w-3xl",
+          "relative p-5 rounded-2xl max-w-3xl",
           isUser 
-            ? "glass-card bg-white/60 rounded-tr-none border-secondary-100" 
-            : "glass-card rounded-tl-none border-primary-100"
+            ? "glass-card-premium bg-white/60 rounded-tr-none border-secondary-100" 
+            : "glass-card-premium rounded-tl-none border-primary-100"
         )}
       >
-        <p className="whitespace-pre-wrap text-slate-700 leading-relaxed">{message.content}</p>
+        {/* Subtle glowing accent for the bubble edge */}
+        <div className={cn(
+          "absolute inset-0 rounded-2xl opacity-30",
+          isUser ? "shadow-[0_0_20px_rgba(59,130,246,0.2)]" : "shadow-[0_0_20px_rgba(245,158,11,0.2)]",
+          isUser ? "rounded-tr-none" : "rounded-tl-none"
+        )}></div>
         
+        {/* Message content */}
+        <motion.p 
+          className="whitespace-pre-wrap text-slate-700 leading-relaxed relative z-10"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.3 }}
+        >
+          {message.content}
+        </motion.p>
+        
+        {/* Emotion and intent tags */}
         {!isUser && (message.emotionalTone || message.intent) && (
           <motion.div 
-            className="mt-3 flex flex-wrap gap-2 items-center text-xs"
-            initial={{ opacity: 0, y: 5 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3, duration: 0.2 }}
+            className="mt-4 flex flex-wrap gap-2 items-center"
+            variants={badgeVariants}
+            initial="hidden"
+            animate="visible"
           >
             {message.emotionalTone && (
-              <Badge variant="outline" className={cn("px-2 py-0.5 flex items-center gap-1 shadow-sm", emotionColor)}>
-                <Heart className="h-3 w-3" />
-                <span>{message.emotionalTone}</span>
-              </Badge>
+              <motion.div
+                whileHover={{ scale: 1.05, y: -2 }}
+                className={cn(
+                  "text-xs px-3 py-1 rounded-full flex items-center gap-1.5",
+                  emotionStyle.bg,
+                  emotionStyle.text,
+                  "border",
+                  emotionStyle.border,
+                  emotionStyle.glow
+                )}
+              >
+                <motion.span
+                  animate={{ 
+                    scale: [1, 1.1, 1],
+                  }}
+                  transition={{ 
+                    duration: 2, 
+                    repeat: Infinity,
+                    repeatDelay: 1
+                  }}
+                >
+                  <Heart className="h-3 w-3" />
+                </motion.span>
+                <span className="font-medium">{message.emotionalTone}</span>
+              </motion.div>
             )}
             
             {message.intent && (
-              <Badge variant="outline" className={cn("px-2 py-0.5 flex items-center gap-1 shadow-sm", intentColor)}>
-                <BrainCog className="h-3 w-3" />
-                <span>{message.intent}</span>
-              </Badge>
+              <motion.div
+                whileHover={{ scale: 1.05, y: -2 }}
+                className={cn(
+                  "text-xs px-3 py-1 rounded-full flex items-center gap-1.5",
+                  intentStyle.bg,
+                  intentStyle.text,
+                  "border",
+                  intentStyle.border,
+                  intentStyle.glow
+                )}
+              >
+                <motion.span
+                  animate={{ 
+                    rotate: [0, 10, 0, -10, 0],
+                  }}
+                  transition={{ 
+                    duration: 5, 
+                    repeat: Infinity,
+                    repeatDelay: 2
+                  }}
+                >
+                  <BrainCog className="h-3 w-3" />
+                </motion.span>
+                <span className="font-medium">{message.intent}</span>
+              </motion.div>
             )}
           </motion.div>
         )}
@@ -184,53 +611,80 @@ export function MessageDisplay({ message }: MessageDisplayProps) {
 
 export function TypingIndicator() {
   return (
-    <div className="flex items-start gap-3 animate-fadeIn">
-      <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-orange-400 flex items-center justify-center flex-shrink-0 shadow-md">
+    <div className="flex items-start gap-3 my-6">
+      <motion.div 
+        className="w-11 h-11 rounded-full bg-gradient-to-br from-primary to-orange-400 flex items-center justify-center flex-shrink-0 shadow-[0_0_15px_rgba(245,158,11,0.3)]"
+        initial={{ scale: 0 }}
+        animate={{ 
+          scale: [0.8, 1],
+          rotate: [-5, 0]
+        }}
+        transition={{ 
+          type: "spring",
+          stiffness: 500,
+          damping: 30
+        }}
+      >
         <span className="text-white font-display text-lg font-bold">R</span>
-      </div>
-      <div className="glass-card p-3 rounded-2xl rounded-tl-none bg-white/50">
-        <div className="flex space-x-2">
-          <motion.span 
-            className="w-2.5 h-2.5 rounded-full bg-primary"
-            animate={{ 
-              scale: [0.7, 1.2, 0.7],
-              opacity: [0.5, 1, 0.5]
-            }}
-            transition={{
-              duration: 1.5,
-              repeat: Infinity,
-              ease: "easeInOut",
-              delay: 0
-            }}
-          />
-          <motion.span 
-            className="w-2.5 h-2.5 rounded-full bg-primary"
-            animate={{ 
-              scale: [0.7, 1.2, 0.7],
-              opacity: [0.5, 1, 0.5]
-            }}
-            transition={{
-              duration: 1.5,
-              repeat: Infinity,
-              ease: "easeInOut",
-              delay: 0.2
-            }}
-          />
-          <motion.span 
-            className="w-2.5 h-2.5 rounded-full bg-primary"
-            animate={{ 
-              scale: [0.7, 1.2, 0.7],
-              opacity: [0.5, 1, 0.5]
-            }}
-            transition={{
-              duration: 1.5,
-              repeat: Infinity,
-              ease: "easeInOut",
-              delay: 0.4
-            }}
-          />
+      </motion.div>
+      
+      <motion.div 
+        className="glass-card-premium p-4 rounded-2xl rounded-tl-none relative"
+        initial={{ opacity: 0, scale: 0.9, x: -10 }}
+        animate={{ opacity: 1, scale: 1, x: 0 }}
+        transition={{ 
+          type: "spring",
+          stiffness: 500,
+          damping: 30
+        }}
+      >
+        <div className="absolute inset-0 rounded-2xl rounded-tl-none shadow-[0_0_20px_rgba(245,158,11,0.15)] opacity-30"></div>
+        
+        <div className="flex space-x-3 items-center relative z-10">
+          <Sparkles className="h-4 w-4 text-primary/50 animate-pulse-subtle" />
+          <div className="flex space-x-2">
+            <motion.span 
+              className="w-3 h-3 rounded-full bg-gradient-to-br from-primary to-amber-400"
+              animate={{ 
+                scale: [0.5, 1.2, 0.5],
+                opacity: [0.5, 1, 0.5]
+              }}
+              transition={{
+                duration: 1.5,
+                repeat: Infinity,
+                ease: "easeInOut",
+                delay: 0
+              }}
+            />
+            <motion.span 
+              className="w-3 h-3 rounded-full bg-gradient-to-br from-primary to-amber-400"
+              animate={{ 
+                scale: [0.5, 1.2, 0.5],
+                opacity: [0.5, 1, 0.5]
+              }}
+              transition={{
+                duration: 1.5,
+                repeat: Infinity,
+                ease: "easeInOut",
+                delay: 0.2
+              }}
+            />
+            <motion.span 
+              className="w-3 h-3 rounded-full bg-gradient-to-br from-primary to-amber-400"
+              animate={{ 
+                scale: [0.5, 1.2, 0.5],
+                opacity: [0.5, 1, 0.5]
+              }}
+              transition={{
+                duration: 1.5,
+                repeat: Infinity,
+                ease: "easeInOut",
+                delay: 0.4
+              }}
+            />
+          </div>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 }

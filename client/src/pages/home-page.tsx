@@ -191,12 +191,81 @@ export default function HomePage() {
           >
             {/* Content cards */}
             <motion.div 
-              className="glass-card flex-1 flex flex-col shadow-lg relative overflow-hidden"
+              className="glass-card-premium flex-1 flex flex-col shadow-lg relative overflow-hidden bg-noise"
               variants={staggerItemVariants}
             >
               {/* Glassmorphic decorative elements */}
-              <div className="absolute top-0 right-0 w-32 h-32 rounded-full bg-gradient-to-tr from-primary/20 to-primary/5 blur-2xl -translate-y-1/2 translate-x-1/2"></div>
-              <div className="absolute bottom-0 left-0 w-40 h-40 rounded-full bg-gradient-to-tr from-accent/20 to-accent/5 blur-2xl translate-y-1/2 -translate-x-1/2"></div>
+              <motion.div 
+                className="absolute top-0 right-0 w-96 h-96 rounded-full bg-gradient-to-tr from-primary/20 to-orange-300/10 blur-3xl -translate-y-1/2 translate-x-1/2"
+                animate={{ 
+                  scale: [1, 1.1, 1],
+                  opacity: [0.6, 0.8, 0.6]
+                }}
+                transition={{ 
+                  duration: 10, 
+                  repeat: Infinity,
+                  ease: "easeInOut" 
+                }}
+              />
+              
+              <motion.div 
+                className="absolute bottom-0 left-0 w-[500px] h-[500px] rounded-full bg-gradient-to-tr from-accent/20 to-accent/5 blur-3xl translate-y-1/2 -translate-x-1/2"
+                animate={{ 
+                  scale: [1, 1.15, 1],
+                  opacity: [0.5, 0.7, 0.5]
+                }}
+                transition={{ 
+                  duration: 12, 
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                  delay: 1
+                }}
+              />
+              
+              <motion.div 
+                className="absolute top-1/3 right-1/4 w-80 h-80 rounded-full bg-gradient-to-tr from-secondary/15 to-secondary/5 blur-3xl"
+                animate={{ 
+                  scale: [1, 1.2, 1],
+                  opacity: [0.4, 0.6, 0.4]
+                }}
+                transition={{ 
+                  duration: 8, 
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                  delay: 2
+                }}
+              />
+              
+              {/* Light glints */}
+              <motion.div 
+                className="absolute w-[2px] h-[2px] bg-white rounded-full shadow-[0_0_10px_6px_rgba(255,255,255,0.5)]"
+                style={{ top: '10%', left: '25%' }}
+                animate={{ 
+                  opacity: [0, 1, 0],
+                  scale: [0.5, 1.1, 0.5]
+                }}
+                transition={{ 
+                  duration: 4, 
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                  delay: 1
+                }}
+              />
+              
+              <motion.div 
+                className="absolute w-[2px] h-[2px] bg-white rounded-full shadow-[0_0_8px_4px_rgba(255,255,255,0.4)]"
+                style={{ top: '35%', right: '15%' }}
+                animate={{ 
+                  opacity: [0, 1, 0],
+                  scale: [0.5, 1.2, 0.5]
+                }}
+                transition={{ 
+                  duration: 3.5, 
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                  delay: 2
+                }}
+              />
               
               {/* Views */}
               {view === 'conversation' && <ConversationView />}
@@ -207,48 +276,135 @@ export default function HomePage() {
             {/* Feature cards - only show on larger screens when in conversation view */}
             {view === 'conversation' && (
               <motion.div 
-                className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4"
+                className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-6"
                 variants={staggerContainerVariants}
                 initial="hidden"
                 animate="visible"
               >
                 {/* Emotional Intelligence */}
                 <motion.div 
-                  className="glass-card p-5 flex flex-col items-center text-center"
+                  className="glass-card-premium p-6 flex flex-col items-center text-center overflow-hidden relative group"
                   variants={staggerItemVariants}
-                  whileHover={{ y: -5, boxShadow: "0 15px 30px rgba(0,0,0,0.1)" }}
+                  whileHover={{ y: -5 }}
                 >
-                  <div className="w-12 h-12 rounded-full bg-gradient-to-tr from-emotion-500 to-emotion-400 flex items-center justify-center mb-3 shadow-glow-emotion">
-                    <HeartIcon className="w-6 h-6 text-white" />
-                  </div>
-                  <h3 className="font-medium text-lg mb-2 text-gradient-emotion">Emotional Intelligence</h3>
-                  <p className="text-sm text-slate-600">Understand the emotions behind each conversation with advanced AI analysis.</p>
+                  {/* Background decoration */}
+                  <div className="absolute -inset-1 bg-gradient-to-r from-emotion-500/30 via-emotion-400/5 to-emotion-500/30 opacity-0 group-hover:opacity-100 blur-xl transition-opacity duration-700"></div>
+                  
+                  {/* Animated ring */}
+                  <motion.div 
+                    className="w-24 h-24 rounded-full border-[3px] border-emotion-300/40 absolute top-8 flex items-center justify-center"
+                    style={{ scale: 1.2, rotate: 45 }}
+                    animate={{ rotate: 405 }}
+                    transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+                  ></motion.div>
+                  
+                  {/* Icon container */}
+                  <motion.div 
+                    className="w-16 h-16 rounded-full bg-gradient-to-tr from-emotion-500 to-emotion-400 flex items-center justify-center mb-5 shadow-glow-emotion relative z-10"
+                    whileHover={{ scale: 1.1 }}
+                    transition={{ type: "spring", stiffness: 300 }}
+                  >
+                    <HeartIcon className="w-7 h-7 text-white" />
+                    <motion.div 
+                      className="absolute inset-0 rounded-full bg-white opacity-0" 
+                      animate={{ 
+                        opacity: [0, 0.5, 0],
+                        scale: [1, 1.5, 1]
+                      }}
+                      transition={{ 
+                        duration: 2, 
+                        repeat: Infinity,
+                        repeatDelay: 2
+                      }}
+                    />
+                  </motion.div>
+                  
+                  <h3 className="font-display font-bold text-lg mb-3 text-gradient-emotion relative z-10">Emotional Intelligence</h3>
+                  <p className="text-sm text-slate-600 leading-relaxed relative z-10">Understand the emotions behind each conversation with advanced AI analysis.</p>
                 </motion.div>
                 
                 {/* Personal Reflections */}
                 <motion.div 
-                  className="glass-card p-5 flex flex-col items-center text-center"
+                  className="glass-card-premium p-6 flex flex-col items-center text-center overflow-hidden relative group"
                   variants={staggerItemVariants}
-                  whileHover={{ y: -5, boxShadow: "0 15px 30px rgba(0,0,0,0.1)" }}
+                  whileHover={{ y: -5 }}
                 >
-                  <div className="w-12 h-12 rounded-full bg-gradient-to-tr from-primary to-primary-400 flex items-center justify-center mb-3 shadow-glow">
-                    <BrainIcon className="w-6 h-6 text-white" />
-                  </div>
-                  <h3 className="font-medium text-lg mb-2 text-gradient">Authentic Reflections</h3>
-                  <p className="text-sm text-slate-600">Explore a curated collection of personal thoughts, stories, and philosophies.</p>
+                  {/* Background decoration */}
+                  <div className="absolute -inset-1 bg-gradient-to-r from-primary/30 via-primary-400/5 to-primary/30 opacity-0 group-hover:opacity-100 blur-xl transition-opacity duration-700"></div>
+                  
+                  {/* Animated ring */}
+                  <motion.div 
+                    className="w-24 h-24 rounded-full border-[3px] border-primary-300/40 absolute top-8 flex items-center justify-center"
+                    style={{ scale: 1.2, rotate: 0 }}
+                    animate={{ rotate: 360 }}
+                    transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
+                  ></motion.div>
+                  
+                  {/* Icon container */}
+                  <motion.div 
+                    className="w-16 h-16 rounded-full bg-gradient-to-tr from-primary to-primary-400 flex items-center justify-center mb-5 shadow-glow relative z-10"
+                    whileHover={{ scale: 1.1 }}
+                    transition={{ type: "spring", stiffness: 300 }}
+                  >
+                    <BrainIcon className="w-7 h-7 text-white" />
+                    <motion.div 
+                      className="absolute inset-0 rounded-full bg-white opacity-0"
+                      animate={{ 
+                        opacity: [0, 0.5, 0],
+                        scale: [1, 1.5, 1]
+                      }}
+                      transition={{ 
+                        duration: 2, 
+                        repeat: Infinity,
+                        repeatDelay: 3
+                      }}
+                    />
+                  </motion.div>
+                  
+                  <h3 className="font-display font-bold text-lg mb-3 text-gradient relative z-10">Authentic Reflections</h3>
+                  <p className="text-sm text-slate-600 leading-relaxed relative z-10">Explore a curated collection of personal thoughts, stories, and philosophies.</p>
                 </motion.div>
                 
                 {/* Interactive Experience */}
                 <motion.div 
-                  className="glass-card p-5 flex flex-col items-center text-center"
+                  className="glass-card-premium p-6 flex flex-col items-center text-center overflow-hidden relative group"
                   variants={staggerItemVariants}
-                  whileHover={{ y: -5, boxShadow: "0 15px 30px rgba(0,0,0,0.1)" }}
+                  whileHover={{ y: -5 }}
                 >
-                  <div className="w-12 h-12 rounded-full bg-gradient-to-tr from-accent-500 to-accent-400 flex items-center justify-center mb-3 shadow-glow-accent">
-                    <SparklesIcon className="w-6 h-6 text-white" />
-                  </div>
-                  <h3 className="font-medium text-lg mb-2 text-gradient-accent">Interactive Experience</h3>
-                  <p className="text-sm text-slate-600">Engage in meaningful conversations that feel genuinely human and emotionally rich.</p>
+                  {/* Background decoration */}
+                  <div className="absolute -inset-1 bg-gradient-to-r from-accent/30 via-accent-400/5 to-accent/30 opacity-0 group-hover:opacity-100 blur-xl transition-opacity duration-700"></div>
+                  
+                  {/* Animated ring */}
+                  <motion.div 
+                    className="w-24 h-24 rounded-full border-[3px] border-accent-300/40 absolute top-8 flex items-center justify-center"
+                    style={{ scale: 1.2, rotate: 90 }}
+                    animate={{ rotate: 450 }}
+                    transition={{ duration: 22, repeat: Infinity, ease: "linear" }}
+                  ></motion.div>
+                  
+                  {/* Icon container */}
+                  <motion.div 
+                    className="w-16 h-16 rounded-full bg-gradient-to-tr from-accent-500 to-accent-400 flex items-center justify-center mb-5 shadow-glow-accent relative z-10"
+                    whileHover={{ scale: 1.1 }}
+                    transition={{ type: "spring", stiffness: 300 }}
+                  >
+                    <SparklesIcon className="w-7 h-7 text-white" />
+                    <motion.div 
+                      className="absolute inset-0 rounded-full bg-white opacity-0"
+                      animate={{ 
+                        opacity: [0, 0.5, 0],
+                        scale: [1, 1.5, 1]
+                      }}
+                      transition={{ 
+                        duration: 2, 
+                        repeat: Infinity,
+                        repeatDelay: 4
+                      }}
+                    />
+                  </motion.div>
+                  
+                  <h3 className="font-display font-bold text-lg mb-3 text-gradient-accent relative z-10">Interactive Experience</h3>
+                  <p className="text-sm text-slate-600 leading-relaxed relative z-10">Engage in meaningful conversations that feel genuinely human and emotionally rich.</p>
                 </motion.div>
               </motion.div>
             )}
