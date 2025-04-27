@@ -363,60 +363,6 @@ export function ConversationView() {
                 value={messageText}
                 onChange={setMessageText}
               />
-              
-              <AnimatePresence>
-                {messageText.trim().length > 0 ? (
-                  <motion.button
-                    className="absolute right-3 bottom-2.5 p-2 rounded-full bg-gradient-to-br from-primary to-primary-600 text-white shadow-glow overflow-hidden"
-                    onClick={() => handleSendMessage(messageText)}
-                    whileHover={{ scale: 1.1, boxShadow: "0 0 25px 5px rgba(255, 155, 0, 0.3)" }}
-                    whileTap={{ scale: 0.95 }}
-                    initial={{ scale: 0, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                    exit={{ scale: 0, opacity: 0 }}
-                    transition={{ type: "spring", stiffness: 500 }}
-                  >
-                    {/* Subtle shimmer effect */}
-                    <motion.div 
-                      className="absolute inset-0"
-                      initial={{ x: '-100%' }}
-                      animate={{ x: '100%' }}
-                      transition={{ 
-                        duration: 1.5,
-                        repeat: Infinity,
-                        repeatDelay: 0.5
-                      }}
-                      style={{
-                        background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent)',
-                        zIndex: 0
-                      }}
-                    />
-                    <CornerDownLeftIcon className="h-4 w-4 relative z-10" />
-                  </motion.button>
-                ) : (
-                  <motion.span
-                    className="absolute right-3 bottom-2.5 text-primary-400/70 flex items-center gap-1.5 text-xs"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 1, duration: 0.5 }}
-                  >
-                    <span>Type a message</span>
-                    <motion.span
-                      animate={{ 
-                        y: [0, -2, 0]
-                      }}
-                      transition={{ 
-                        duration: 2, 
-                        repeat: Infinity,
-                        repeatDelay: 1
-                      }}
-                      className="inline-flex"
-                    >
-                      <SparklesIcon className="h-3.5 w-3.5" />
-                    </motion.span>
-                  </motion.span>
-                )}
-              </AnimatePresence>
             </div>
           </div>
         </motion.div>
