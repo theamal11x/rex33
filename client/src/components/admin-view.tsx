@@ -11,7 +11,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useToast } from '@/hooks/use-toast';
 import { useLocation } from 'wouter';
 import { apiRequest, queryClient } from '@/lib/queryClient';
-import { PenIcon, PlusIcon, TrashIcon, ArrowLeftIcon } from 'lucide-react';
+import { PenIcon, PlusIcon, TrashIcon, ArrowLeftIcon, Sliders } from 'lucide-react';
+import { AiGuidelinesManager } from './ai-guidelines-manager';
 import { format } from 'date-fns';
 import {
   Dialog,
@@ -298,6 +299,12 @@ export function AdminView() {
                   Categories
                 </TabsTrigger>
                 <TabsTrigger 
+                  value="ai-guidelines" 
+                  className="px-4 py-3 text-sm font-medium data-[state=active]:border-b-2 data-[state=active]:border-teal-600 data-[state=active]:text-teal-600 rounded-none"
+                >
+                  AI Guidelines
+                </TabsTrigger>
+                <TabsTrigger 
                   value="settings" 
                   className="px-4 py-3 text-sm font-medium data-[state=active]:border-b-2 data-[state=active]:border-teal-600 data-[state=active]:text-teal-600 rounded-none"
                 >
@@ -444,6 +451,11 @@ export function AdminView() {
                   </div>
                 )}
               </div>
+            </TabsContent>
+            
+            {/* AI Guidelines Management */}
+            <TabsContent value="ai-guidelines" className="p-6 m-0">
+              <AiGuidelinesManager />
             </TabsContent>
             
             {/* Settings */}
