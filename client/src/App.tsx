@@ -7,7 +7,6 @@ import NotFound from "@/pages/not-found";
 import HomePage from "@/pages/home-page";
 import AdminPage from "@/pages/admin-page";
 import { AppProvider } from "./context/app-context";
-import { ThemeProvider } from "next-themes";
 import { SplashScreen } from "@/components/splash-screen";
 
 function Router() {

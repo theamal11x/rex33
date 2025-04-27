@@ -3,6 +3,8 @@ import { useApp } from '@/context/app-context';
 import { MessageInput } from '@/components/ui/message-input';
 import { MessageDisplay, TypingIndicator } from '@/components/ui/message-display';
 import { motion } from 'framer-motion';
+import { SocialLinks } from '@/components/social-links';
+import { MessageSquareIcon, HeartIcon, SparklesIcon } from 'lucide-react';
 
 export function ConversationView() {
   const { messages, sendMessage, isTyping } = useApp();
@@ -14,37 +16,77 @@ export function ConversationView() {
   }, [messages]);
   
   return (
-    <div className="flex-1 flex flex-col h-full">
-      <div className="bg-white rounded-2xl shadow-md overflow-hidden flex flex-col flex-1 border border-amber-500/10">
+    <motion.div 
+      className="flex-1 flex flex-col h-full"
+      initial={{ opacity: 0, scale: 0.98 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.5 }}
+    >
+      <motion.div 
+        className="bg-white/70 backdrop-blur-sm rounded-2xl shadow-md overflow-hidden flex flex-col flex-1 border border-amber-200"
+        initial={{ y: 20 }}
+        animate={{ y: 0 }}
+        transition={{ duration: 0.5, delay: 0.1 }}
+      >
         {/* Welcome Header */}
-        <div className="px-6 py-5 bg-gradient-to-r from-amber-100/50 to-cream border-b border-amber-500/10">
-          <h2 className="text-xl font-medium">Welcome to Rex</h2>
-          <p className="text-slate-700/70 text-sm">Mohsin's emotional mirror and personal reflection space</p>
-        </div>
+        <motion.div 
+          className="px-6 py-5 bg-gradient-to-r from-amber-100 to-amber-50/80 border-b border-amber-200"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+        >
+          <div className="flex items-center gap-2 mb-1">
+            <HeartIcon className="h-5 w-5 text-amber-500" />
+            <h2 className="text-xl font-medium text-amber-900">Welcome to Rex</h2>
+          </div>
+          <div className="flex justify-between items-center">
+            <p className="text-slate-700/80 text-sm">Mohsin's emotional mirror and personal reflection space</p>
+            <SocialLinks />
+          </div>
+        </motion.div>
         
         {/* Conversation Area */}
-        <div className="flex-1 p-4 overflow-y-auto space-y-4" style={{ maxHeight: '65vh' }}>
+        <motion.div 
+          className="flex-1 p-6 overflow-y-auto space-y-5" 
+          style={{ maxHeight: '65vh' }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5, delay: 0.3 }}
+        >
           {/* Initial greeting message if no messages */}
           {messages.length === 0 && (
             <motion.div 
               className="flex items-start space-x-3"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.5 }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.5 }}
             >
-              <div className="w-8 h-8 rounded-full bg-amber-500 flex items-center justify-center flex-shrink-0">
-                <span className="text-white font-['Caveat'] text-lg font-bold">R</span>
+              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-amber-500 to-amber-400 flex items-center justify-center flex-shrink-0 shadow-md">
+                <span className="text-white font-['Caveat'] text-xl font-bold">R</span>
               </div>
-              <div className="bg-amber-100/50 text-slate-800 p-3 rounded-2xl rounded-tl-none max-w-3xl">
-                <p className="font-medium mb-1">Hello there.</p>
-                <p>I'm Rex, an emotional mirror of Mohsin Raja's thoughts, feelings, and reflections. I'm here to share his perspective, stories, and inner world with you. What would you like to talk about?</p>
+              <div className="bg-gradient-to-r from-amber-100/70 to-amber-50/80 text-slate-800 p-4 rounded-2xl rounded-tl-none max-w-3xl shadow-sm border border-amber-200/50">
+                <p className="font-medium mb-2 text-amber-900 flex items-center gap-2">
+                  <SparklesIcon className="h-4 w-4 text-amber-500" />
+                  Hello there.
+                </p>
+                <p className="text-slate-700 leading-relaxed">
+                  I'm Rex, an emotional mirror of Mohsin Raja's thoughts, feelings, and reflections. 
+                  I'm here to share his perspective, stories, and inner world with you. What would you like to talk about?
+                </p>
               </div>
             </motion.div>
           )}
           
           {/* Conversation messages */}
-          {messages.map((message) => (
-            <MessageDisplay key={message.id} message={message} />
+          {messages.map((message, index) => (
+            <motion.div
+              key={message.id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
+            >
+              <MessageDisplay message={message} />
+            </motion.div>
           ))}
           
           {/* Typing indicator */}
@@ -52,16 +94,25 @@ export function ConversationView() {
           
           {/* Empty div for auto-scrolling */}
           <div ref={messagesEndRef} />
-        </div>
+        </motion.div>
         
         {/* Input Area */}
-        <div className="border-t border-amber-500/10 p-3 bg-cream">
-          <MessageInput 
-            onSendMessage={sendMessage} 
-            disabled={isTyping}
-          />
-        </div>
-      </div>
-    </div>
+        <motion.div 
+          className="border-t border-amber-200 p-4 bg-gradient-to-r from-amber-50 to-amber-100/50"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.4 }}
+        >
+          <div className="flex items-center gap-2">
+            <MessageSquareIcon className="h-5 w-5 text-amber-500" />
+            <MessageInput 
+              onSendMessage={sendMessage} 
+              disabled={isTyping}
+              placeholder="Type your message to Rex..."
+            />
+          </div>
+        </motion.div>
+      </motion.div>
+    </motion.div>
   );
 }
