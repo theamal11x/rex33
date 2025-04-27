@@ -51,7 +51,7 @@ export function MessageInput({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex space-x-3">
+    <form onSubmit={handleSubmit} className="flex space-x-2 sm:space-x-3">
       <div className="flex-1">
         <Input
           value={message}
@@ -59,15 +59,15 @@ export function MessageInput({
           onKeyDown={handleKeyDown}
           placeholder={placeholder}
           disabled={disabled}
-          className="w-full px-4 py-3 rounded-full bg-white border border-amber-300/30 focus:border-amber-500 focus:ring-1 focus:ring-amber-500 focus:outline-none text-slate-800 placeholder:text-slate-500/50 h-12"
+          className="w-full px-3 sm:px-4 py-2 sm:py-3 rounded-full bg-white border border-amber-300/30 focus:border-amber-500 focus:ring-1 focus:ring-amber-500 focus:outline-none text-slate-800 placeholder:text-slate-500/50 text-sm sm:text-base h-10 sm:h-12"
         />
       </div>
       <Button 
         type="submit" 
         disabled={disabled || !message.trim()} 
-        className="bg-amber-500 hover:bg-amber-600 text-white px-5 py-3 rounded-full flex items-center justify-center transition-colors h-12 w-12"
+        className="bg-amber-500 hover:bg-amber-600 text-white rounded-full flex items-center justify-center transition-colors h-10 w-10 sm:h-12 sm:w-12"
       >
-        <Layers className="h-5 w-5" />
+        <Layers className="h-4 w-4 sm:h-5 sm:w-5" />
       </Button>
     </form>
   );

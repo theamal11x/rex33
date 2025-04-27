@@ -23,13 +23,13 @@ export function SocialLinks() {
     {
       name: "GitHub",
       url: "https://github.com/theamal11z",
-      icon: <SiGithub className="w-4 h-4" />,
+      icon: <SiGithub className="w-3 h-3 sm:w-4 sm:h-4" />,
       color: "hover:text-[#333] focus:text-[#333]"
     },
     {
       name: "Instagram",
       url: "https://www.instagram.com/alamal11x/",
-      icon: <SiInstagram className="w-4 h-4" />,
+      icon: <SiInstagram className="w-3 h-3 sm:w-4 sm:h-4" />,
       color: "hover:text-[#E4405F] focus:text-[#E4405F]"
     }
   ];

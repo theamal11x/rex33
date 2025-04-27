@@ -132,7 +132,7 @@ export function MessageDisplay({ message }: MessageDisplayProps) {
     >
       <div 
         className={cn(
-          "w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0",
+          "w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center flex-shrink-0",
           isUser ? "bg-teal-100" : "bg-amber-500",
           "shadow-sm"
         )}
@@ -140,13 +140,13 @@ export function MessageDisplay({ message }: MessageDisplayProps) {
         {isUser ? (
           <span className="text-teal-700 font-medium text-xs">You</span>
         ) : (
-          <span className="text-white font-['Caveat'] text-lg font-bold">R</span>
+          <span className="text-white font-['Caveat'] text-base sm:text-lg font-bold">R</span>
         )}
       </div>
       
       <div 
         className={cn(
-          "p-4 rounded-2xl max-w-3xl shadow-sm",
+          "p-3 sm:p-4 rounded-xl sm:rounded-2xl max-w-3xl shadow-sm",
           isUser 
             ? "bg-teal-50 text-slate-800 rounded-tr-none" 
             : "bg-amber-100/50 text-slate-800 rounded-tl-none"
@@ -179,10 +179,10 @@ export function MessageDisplay({ message }: MessageDisplayProps) {
 export function TypingIndicator() {
   return (
     <div className="flex items-start space-x-3 animate-fadeIn">
-      <div className="w-8 h-8 rounded-full bg-amber-500 flex items-center justify-center flex-shrink-0">
-        <span className="text-white font-['Caveat'] text-lg font-bold">R</span>
+      <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-amber-500 flex items-center justify-center flex-shrink-0">
+        <span className="text-white font-['Caveat'] text-base sm:text-lg font-bold">R</span>
       </div>
-      <div className="bg-amber-100/30 p-3 rounded-2xl rounded-tl-none">
+      <div className="bg-amber-100/30 p-2 sm:p-3 rounded-xl sm:rounded-2xl rounded-tl-none">
         <div className="flex space-x-1">
           <span className="w-2 h-2 rounded-full bg-amber-500 animate-bounce" style={{ animationDelay: '0ms' }}></span>
           <span className="w-2 h-2 rounded-full bg-amber-500 animate-bounce" style={{ animationDelay: '100ms' }}></span>
