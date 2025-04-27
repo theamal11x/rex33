@@ -39,14 +39,22 @@ export async function analyzeMessageWithGemini(message: string, conversationCont
     }
 
     prompt += `
-    As Rex, analyze this message and respond with:
-    1. The emotional tone of the message (such as happy, curious, anxious, reflective, etc.)
-    2. The user's intent (question, sharing, seeking advice, etc.)
-    3. A thoughtful, warm response in Mohsin's voice that acknowledges the emotional content and responds authentically
+    As Rex, analyze this message and respond with THREE pieces of information in a JSON format:
     
-    Format your response as a JSON object with these keys: emotionalTone, intent, response.
+    1. emotionalTone: The emotional tone of the user's message (such as happy, curious, anxious, reflective, etc.)
+    2. intent: The user's intent (question, sharing, seeking advice, etc.)
+    3. response: A thoughtful, warm response in Mohsin's voice that acknowledges the emotional content and responds authentically
+    
+    YOUR RESPONSE MUST BE IN THIS EXACT FORMAT:
+    {
+      "emotionalTone": "the detected emotion",
+      "intent": "the detected intent",
+      "response": "Your thoughtful response here"
+    }
+    
     Make sure the response is personal, reflective, and shows vulnerability when appropriate.
     The response should embody Mohsin's perspective and inner world.
+    DO NOT include any text outside of this JSON object.
     `;
 
     // Generate content with the model
@@ -59,21 +67,44 @@ export async function analyzeMessageWithGemini(message: string, conversationCont
       const jsonMatch = text.match(/\{[\s\S]*\}/);
       if (jsonMatch) {
         const parsedResponse = JSON.parse(jsonMatch[0]);
+        
+        // Make sure we're returning only the response content, not the whole JSON
         return {
           emotionalTone: parsedResponse.emotionalTone || "neutral",
           intent: parsedResponse.intent || "question",
           response: parsedResponse.response || "I'm sorry, I couldn't generate a proper response at the moment."
         };
       }
+      
+      // If no JSON match but we have some text, try to extract information manually
+      if (text.includes("emotionalTone") || text.includes("intent") || text.includes("response")) {
+        // Try to extract components through regex
+        const emotionalToneMatch = text.match(/emotionalTone[\"']?\s*:\s*[\"']([^\"']+)[\"']/i);
+        const intentMatch = text.match(/intent[\"']?\s*:\s*[\"']([^\"']+)[\"']/i);
+        const responseMatch = text.match(/response[\"']?\s*:\s*[\"']([^\"']+)[\"']/i);
+        
+        return {
+          emotionalTone: emotionalToneMatch ? emotionalToneMatch[1] : "neutral",
+          intent: intentMatch ? intentMatch[1] : "question",
+          response: responseMatch ? responseMatch[1] : "I appreciate your message, but I'm having trouble organizing my thoughts right now."
+        };
+      }
     } catch (parseError) {
       console.error("Failed to parse Gemini response as JSON:", parseError);
     }
     
-    // Fallback if parsing fails
+    // Fallback if parsing fails - clean up any JSON or formatting artifacts
+    const cleanedText = text
+      .replace(/\{[\s\S]*\}/, '') // Remove any JSON-like structures
+      .replace(/emotionalTone[\"']?\s*:\s*[\"']([^\"']+)[\"']/ig, '')
+      .replace(/intent[\"']?\s*:\s*[\"']([^\"']+)[\"']/ig, '')
+      .replace(/response[\"']?\s*:\s*[\"']([^\"']+)[\"']/ig, '')
+      .trim();
+      
     return {
       emotionalTone: "neutral",
       intent: "question",
-      response: text || "Thank you for your message. I'm experiencing some difficulty processing right now, but I appreciate your patience."
+      response: cleanedText || "Thank you for your message. I'm experiencing some difficulty processing right now, but I appreciate your patience."
     };
   } catch (error) {
     console.error("Error calling Gemini API:", error);
