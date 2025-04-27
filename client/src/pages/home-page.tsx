@@ -4,6 +4,8 @@ import { ArchiveView } from '@/components/archive-view';
 import { AdminLogin } from '@/components/admin-login';
 import { Sidebar } from '@/components/sidebar';
 import { AuthProvider } from '@/hooks/use-auth';
+import { SocialLinks } from '@/components/social-links';
+import { motion } from 'framer-motion';
 
 export default function HomePage() {
   const { view } = useApp();

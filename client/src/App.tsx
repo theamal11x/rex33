@@ -8,6 +8,7 @@ import HomePage from "@/pages/home-page";
 import AdminPage from "@/pages/admin-page";
 import { AppProvider } from "./context/app-context";
 import { ThemeProvider } from "next-themes";
+import { SplashScreen } from "@/components/splash-screen";
 
 function Router() {
   return (
@@ -25,6 +26,7 @@ function App() {
       <QueryClientProvider client={queryClient}>
         <AppProvider>
           <TooltipProvider>
+            <SplashScreen />
             <Toaster />
             <Router />
           </TooltipProvider>
