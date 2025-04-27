@@ -4,6 +4,7 @@ import {
   contentEntries, 
   conversations, 
   messages,
+  aiGuidelines,
   type User, 
   type InsertUser,
   type Category,
@@ -14,7 +15,9 @@ import {
   type Conversation,
   type InsertConversation,
   type Message,
-  type InsertMessage
+  type InsertMessage,
+  type AiGuideline,
+  type InsertAiGuideline
 } from "@shared/schema";
 
 import { db } from "./db";
@@ -55,6 +58,14 @@ export interface IStorage {
   // Message management
   getMessages(conversationId: number): Promise<Message[]>;
   createMessage(message: InsertMessage): Promise<Message>;
+  
+  // AI Guidelines management
+  getAiGuidelines(): Promise<AiGuideline[]>;
+  getActiveAiGuidelines(): Promise<AiGuideline[]>;
+  getAiGuideline(id: number): Promise<AiGuideline | undefined>;
+  createAiGuideline(guideline: InsertAiGuideline): Promise<AiGuideline>;
+  updateAiGuideline(id: number, guideline: Partial<InsertAiGuideline>): Promise<AiGuideline | undefined>;
+  deleteAiGuideline(id: number): Promise<boolean>;
   
   // Session store for authentication
   sessionStore: session.SessionStore;
@@ -207,6 +218,53 @@ export class DatabaseStorage implements IStorage {
   async createMessage(insertMessage: InsertMessage): Promise<Message> {
     const [message] = await db.insert(messages).values(insertMessage).returning();
     return message;
+  }
+  
+  // AI Guidelines management
+  async getAiGuidelines(): Promise<AiGuideline[]> {
+    return await db
+      .select()
+      .from(aiGuidelines)
+      .orderBy([desc(aiGuidelines.priority), asc(aiGuidelines.title)]);
+  }
+  
+  async getActiveAiGuidelines(): Promise<AiGuideline[]> {
+    return await db
+      .select()
+      .from(aiGuidelines)
+      .where(eq(aiGuidelines.isActive, true))
+      .orderBy([desc(aiGuidelines.priority), asc(aiGuidelines.title)]);
+  }
+  
+  async getAiGuideline(id: number): Promise<AiGuideline | undefined> {
+    const [guideline] = await db.select().from(aiGuidelines).where(eq(aiGuidelines.id, id));
+    return guideline;
+  }
+  
+  async createAiGuideline(insertGuideline: InsertAiGuideline): Promise<AiGuideline> {
+    const [guideline] = await db.insert(aiGuidelines).values(insertGuideline).returning();
+    return guideline;
+  }
+  
+  async updateAiGuideline(id: number, updateData: Partial<InsertAiGuideline>): Promise<AiGuideline | undefined> {
+    const [updatedGuideline] = await db
+      .update(aiGuidelines)
+      .set({
+        ...updateData,
+        updatedAt: new Date(),
+      })
+      .where(eq(aiGuidelines.id, id))
+      .returning();
+    return updatedGuideline;
+  }
+  
+  async deleteAiGuideline(id: number): Promise<boolean> {
+    try {
+      await db.delete(aiGuidelines).where(eq(aiGuidelines.id, id));
+      return true;
+    } catch (error) {
+      return false;
+    }
   }
 }
 

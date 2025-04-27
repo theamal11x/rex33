@@ -149,3 +149,24 @@ export type Conversation = typeof conversations.$inferSelect;
 
 export type InsertMessage = z.infer<typeof insertMessageSchema>;
 export type Message = typeof messages.$inferSelect;
+
+// AI Guidelines table
+export const aiGuidelines = pgTable("ai_guidelines", {
+  id: serial("id").primaryKey(),
+  title: text("title").notNull(),
+  content: text("content").notNull(),
+  isActive: boolean("is_active").default(true).notNull(),
+  priority: integer("priority").default(0).notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull()
+});
+
+export const insertAiGuidelineSchema = createInsertSchema(aiGuidelines).pick({
+  title: true,
+  content: true,
+  isActive: true,
+  priority: true
+});
+
+export type InsertAiGuideline = z.infer<typeof insertAiGuidelineSchema>;
+export type AiGuideline = typeof aiGuidelines.$inferSelect;
