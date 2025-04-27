@@ -222,18 +222,36 @@ export class DatabaseStorage implements IStorage {
   
   // AI Guidelines management
   async getAiGuidelines(): Promise<AiGuideline[]> {
-    return await db
+    const result = await db
       .select()
-      .from(aiGuidelines)
-      .orderBy([desc(aiGuidelines.priority), asc(aiGuidelines.title)]);
+      .from(aiGuidelines);
+    
+    // Sort in memory since the orderBy has issues
+    return result.sort((a, b) => {
+      // First by priority (descending)
+      if (b.priority !== a.priority) {
+        return b.priority - a.priority;
+      }
+      // Then by title (ascending)
+      return a.title.localeCompare(b.title);
+    });
   }
   
   async getActiveAiGuidelines(): Promise<AiGuideline[]> {
-    return await db
+    const result = await db
       .select()
       .from(aiGuidelines)
-      .where(eq(aiGuidelines.isActive, true))
-      .orderBy([desc(aiGuidelines.priority), asc(aiGuidelines.title)]);
+      .where(eq(aiGuidelines.isActive, true));
+    
+    // Sort in memory since the orderBy has issues
+    return result.sort((a, b) => {
+      // First by priority (descending)
+      if (b.priority !== a.priority) {
+        return b.priority - a.priority;
+      }
+      // Then by title (ascending)
+      return a.title.localeCompare(b.title);
+    });
   }
   
   async getAiGuideline(id: number): Promise<AiGuideline | undefined> {

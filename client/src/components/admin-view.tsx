@@ -436,7 +436,7 @@ export function AdminView() {
                       </div>
                       <p className="text-sm text-slate-700/70 mt-2">
                         {contentEntries.filter(e => e.categoryId === category.id).length} entries, 
-                        last updated {formatDate(category.updatedAt)}
+                        last updated {formatDate(category.updatedAt.toString())}
                       </p>
                       {category.description && (
                         <p className="text-sm text-slate-600 mt-2 italic">
