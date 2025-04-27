@@ -22,17 +22,15 @@ function Router() {
 
 function App() {
   return (
-    <ThemeProvider attribute="class" defaultTheme="light">
-      <QueryClientProvider client={queryClient}>
-        <AppProvider>
-          <TooltipProvider>
-            <SplashScreen />
-            <Toaster />
-            <Router />
-          </TooltipProvider>
-        </AppProvider>
-      </QueryClientProvider>
-    </ThemeProvider>
+    <QueryClientProvider client={queryClient}>
+      <AppProvider>
+        <TooltipProvider>
+          <SplashScreen />
+          <Toaster />
+          <Router />
+        </TooltipProvider>
+      </AppProvider>
+    </QueryClientProvider>
   );
 }
 

@@ -12,30 +12,68 @@ export default function HomePage() {
   
   return (
     <AuthProvider>
-      <div className="min-h-screen flex flex-col bg-[#FFFBEB] text-slate-800 font-sans">
+      <div className="min-h-screen flex flex-col bg-gradient-to-b from-amber-50 to-[#FFFBEB] text-slate-800 font-sans">
         {/* Header */}
-        <header className="px-6 py-4 bg-gradient-to-r from-amber-100 to-[#FFFBEB] border-b border-amber-500/20 shadow-sm">
+        <motion.header 
+          className="px-6 py-4 bg-gradient-to-r from-amber-100 to-amber-50 border-b border-amber-200 shadow-sm"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+        >
           <div className="max-w-5xl mx-auto flex justify-between items-center">
-            <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 rounded-full bg-amber-500 flex items-center justify-center animate-pulse">
+            <motion.div 
+              className="flex items-center space-x-3"
+              initial={{ x: -20, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              transition={{ duration: 0.5, delay: 0.3 }}
+            >
+              <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-amber-500 to-amber-400 flex items-center justify-center shadow-md">
                 <span className="text-white font-['Caveat'] text-2xl font-bold">R</span>
               </div>
               <h1 className="text-2xl font-['Caveat'] font-bold text-amber-700">Rex</h1>
-            </div>
-            <p className="hidden md:block text-sm italic text-slate-700/70">"A mirror to the soul behind the words"</p>
+            </motion.div>
+            <motion.p 
+              className="hidden md:block text-sm italic text-slate-700/70"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5, delay: 0.4 }}
+            >
+              "A mirror to the soul behind the words"
+            </motion.p>
           </div>
-        </header>
+          <SocialLinks />
+        </motion.header>
         
         {/* Main Content */}
-        <main className="flex-1 flex flex-col lg:flex-row max-w-7xl w-full mx-auto p-4">
-          <div className="flex-1 flex flex-col h-full transition-all duration-300">
+        <motion.main 
+          className="flex-1 flex flex-col lg:flex-row max-w-7xl w-full mx-auto p-4 gap-4"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5, delay: 0.5 }}
+        >
+          <motion.div 
+            className="flex-1 flex flex-col h-full transition-all duration-300 bg-white/40 backdrop-blur-sm rounded-2xl shadow-sm border border-amber-100 overflow-hidden"
+            initial={{ scale: 0.98, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.6 }}
+          >
             {view === 'conversation' && <ConversationView />}
             {view === 'archive' && <ArchiveView />}
             {view === 'adminLogin' && <AdminLogin />}
-          </div>
+          </motion.div>
           
           <Sidebar />
-        </main>
+        </motion.main>
+        
+        {/* Footer */}
+        <motion.footer 
+          className="py-3 px-6 bg-gradient-to-r from-amber-50 to-amber-100 border-t border-amber-200 text-center text-xs text-amber-700/70"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.7 }}
+        >
+          <p>© {new Date().getFullYear()} Mohsin Raja. A personal emotional journey shared.</p>
+        </motion.footer>
       </div>
     </AuthProvider>
   );
