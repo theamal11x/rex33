@@ -15,34 +15,22 @@ interface SocialLink {
 export function SocialLinks() {
   const socialLinks: SocialLink[] = [
     {
-      name: "LinkedIn",
-      url: "https://www.linkedin.com/in/mohsinraja/",
-      icon: <SiLinkedin className="w-4 h-4" />,
-      color: "hover:text-[#0A66C2] focus:text-[#0A66C2]"
-    },
-    {
       name: "Twitter",
-      url: "https://twitter.com/mohsinraja",
+      url: "https://x.com/theamal11x",
       icon: <RiTwitterXFill className="w-4 h-4" />,
       color: "hover:text-[#000000] focus:text-[#000000]"
     },
     {
       name: "GitHub",
-      url: "https://github.com/mohsinraja",
+      url: "https://github.com/theamal11z",
       icon: <SiGithub className="w-4 h-4" />,
       color: "hover:text-[#333] focus:text-[#333]"
     },
     {
       name: "Instagram",
-      url: "https://instagram.com/mohsinraja",
+      url: "https://www.instagram.com/alamal11x/",
       icon: <SiInstagram className="w-4 h-4" />,
       color: "hover:text-[#E4405F] focus:text-[#E4405F]"
-    },
-    {
-      name: "Website",
-      url: "https://mohsinraja.com",
-      icon: <HiGlobeAlt className="w-4 h-4" />,
-      color: "hover:text-amber-500 focus:text-amber-500"
     }
   ];
   
