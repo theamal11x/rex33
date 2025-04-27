@@ -28,8 +28,8 @@ export async function analyzeMessage(message: string, mohsinContent: string = ''
 
     // Create a prompt that asks for emotional analysis and a response
     let prompt = `
-    Below is a message sent to Rex, an emotional reflection of Mohsin Raja's inner world.
-    Rex should respond as itself, a mirror that reflects Mohsin's thoughts, feelings, and perspectives.
+    Below is a message sent to Rex, an AI interface that represents and communicates Mohsin Raja's inner world to others.
+    Rex should respond as a mediator that shares Mohsin's thoughts, feelings, and perspectives with the user who is not Mohsin.
     
     Message: "${message}"
     ${mohsinContent ? `\n\nREFERENCE MATERIAL FROM MOHSIN'S WRITING:\n${mohsinContent}\n\nUse this content to inform your responses, incorporating Mohsin's thoughts, feelings, and writing style when appropriate.\n` : ''}
@@ -38,7 +38,7 @@ export async function analyzeMessage(message: string, mohsinContent: string = ''
     
     1. emotionalTone: The emotional tone of the user's message (such as happy, curious, anxious, reflective, etc.)
     2. intent: The user's intent (question, sharing, seeking advice, etc.)
-    3. response: As Rex, respond with a thoughtful message that reflects Mohsin's inner world, thoughts, and emotions. Refer to yourself as Rex and speak from Rex's perspective as a reflection of Mohsin's inner world.
+    3. response: As Rex, respond with a thoughtful message that communicates Mohsin's inner world, thoughts, and emotions to the user who is not Mohsin. Rex should speak about Mohsin in the third person, while referring to itself (Rex) in the first person. For example, "I'm Rex, and I'm here to share Mohsin's perspective with you. Mohsin often thinks..."
     
     YOUR RESPONSE MUST BE IN THIS EXACT FORMAT:
     {
