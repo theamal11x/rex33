@@ -185,7 +185,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const conversation = await getOrCreateConversation(sessionId);
       
       // Save user message
-      await storage.createMessage({
+      const userMessage = await storage.createMessage({
         conversationId: conversation.id,
         content: message,
         role: 'user',
@@ -193,21 +193,31 @@ export async function registerRoutes(app: Express): Promise<Server> {
         intent: null
       });
       
-      // This would be where we call the Gemini API for response and emotional analysis
-      // For now, we'll just create a placeholder response
-      const response = {
-        content: "Thank you for your message. This is a placeholder response that would normally come from the Gemini API with emotional intelligence.",
-        emotionalTone: "neutral",
-        intent: "responding"
-      };
+      // Get previous conversation context for better responses
+      const existingMessages = await storage.getMessages(conversation.id);
+      let conversationContext = '';
+      
+      // Build context from last 5 messages (if available)
+      if (existingMessages.length > 0) {
+        const recentMessages = existingMessages.slice(-Math.min(5, existingMessages.length));
+        conversationContext = recentMessages.map(msg => 
+          `${msg.role === 'user' ? 'User' : 'Rex'}: ${msg.content}`
+        ).join('\n');
+      }
+      
+      // Import the Gemini integration
+      const { analyzeMessageWithGemini } = await import('./gemini');
+      
+      // Call Gemini API for response and emotional analysis
+      const geminiResponse = await analyzeMessageWithGemini(message, conversationContext);
       
       // Save assistant response
       const savedResponse = await storage.createMessage({
         conversationId: conversation.id,
-        content: response.content,
+        content: geminiResponse.response,
         role: 'assistant',
-        emotionalTone: response.emotionalTone,
-        intent: response.intent
+        emotionalTone: geminiResponse.emotionalTone,
+        intent: geminiResponse.intent
       });
       
       res.json({

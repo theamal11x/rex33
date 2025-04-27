@@ -1,7 +1,7 @@
 import { GoogleGenerativeAI, HarmCategory, HarmBlockThreshold } from '@google/generative-ai';
 
 // Initialize the Google Gemini API client
-const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GOOGLE_GEMINI_API_KEY);
+const genAI = new GoogleGenerativeAI(process.env.GOOGLE_GEMINI_API_KEY as string);
 
 export interface GeminiAnalysisResult {
   emotionalTone: string;
@@ -9,7 +9,7 @@ export interface GeminiAnalysisResult {
   response: string;
 }
 
-export async function analyzeMessage(message: string): Promise<GeminiAnalysisResult> {
+export async function analyzeMessageWithGemini(message: string, conversationContext: string = ''): Promise<GeminiAnalysisResult> {
   try {
     // Use the gemini-pro model
     const model = genAI.getGenerativeModel({
@@ -27,11 +27,18 @@ export async function analyzeMessage(message: string): Promise<GeminiAnalysisRes
     });
 
     // Create a prompt that asks for emotional analysis and a response
-    const prompt = `
+    let prompt = `
     Below is a message sent to Rex, an emotional reflection of Mohsin Raja's inner world.
     
     Message: "${message}"
-    
+    `;
+
+    // Add conversation context if available
+    if (conversationContext) {
+      prompt += `\n\nPrevious conversation context:\n${conversationContext}\n`;
+    }
+
+    prompt += `
     As Rex, analyze this message and respond with:
     1. The emotional tone of the message (such as happy, curious, anxious, reflective, etc.)
     2. The user's intent (question, sharing, seeking advice, etc.)
