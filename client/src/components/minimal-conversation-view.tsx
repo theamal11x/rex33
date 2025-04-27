@@ -75,10 +75,10 @@ export function MinimalConversationView() {
           >
             <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
               <h2 className="font-medium text-gray-800 mb-2">Welcome to Rex Terminal</h2>
-              <p className="text-sm text-gray-600 mb-3">
+              <div className="text-sm text-gray-600 mb-3">
                 I'm Rex, an emotional mirror of Mohsin Raja's thoughts, feelings, and reflections.
                 Ask me anything about his perspectives, values, or creative process.
-              </p>
+              </div>
             </div>
           </motion.div>
         )}

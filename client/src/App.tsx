@@ -4,7 +4,7 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/not-found";
-import HomePage from "@/pages/home-page";
+import MinimalHomePage from "@/pages/minimal-home-page";
 import AdminPage from "@/pages/admin-page";
 import { AppProvider } from "./context/app-context";
 import { SplashScreen } from "@/components/splash-screen";
@@ -12,7 +12,7 @@ import { SplashScreen } from "@/components/splash-screen";
 function Router() {
   return (
     <Switch>
-      <Route path="/" component={HomePage} />
+      <Route path="/" component={MinimalHomePage} />
       <Route path="/admin" component={AdminPage} />
       <Route component={NotFound} />
     </Switch>
