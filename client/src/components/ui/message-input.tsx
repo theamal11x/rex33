@@ -1,4 +1,4 @@
-import { useState, FormEvent, KeyboardEvent } from 'react';
+import { useState, FormEvent, KeyboardEvent, useEffect } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Layers } from 'lucide-react';
@@ -9,12 +9,31 @@ interface MessageInputProps {
   placeholder?: string;
 }
 
+// Define the custom event type
+interface SetMessageInputEvent extends CustomEvent {
+  detail: { message: string };
+}
+
 export function MessageInput({ 
   onSendMessage, 
   disabled = false,
   placeholder = "Ask me anything about Mohsin's thoughts or feelings..."
 }: MessageInputProps) {
   const [message, setMessage] = useState('');
+
+  // Listen for the custom event from sidebar suggested topics
+  useEffect(() => {
+    const handleSetMessage = (event: Event) => {
+      const customEvent = event as SetMessageInputEvent;
+      setMessage(customEvent.detail.message);
+    };
+
+    window.addEventListener('set-message-input', handleSetMessage);
+    
+    return () => {
+      window.removeEventListener('set-message-input', handleSetMessage);
+    };
+  }, []);
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();

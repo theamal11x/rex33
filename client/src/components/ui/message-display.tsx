@@ -1,13 +1,61 @@
 import { Message } from '@shared/schema';
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
+import { BrainCog, Heart, MessageCircle } from 'lucide-react';
+import { Badge } from './badge';
 
 interface MessageDisplayProps {
   message: Message;
 }
 
+// Emotion color mapping for visual cues
+const emotionColors: Record<string, string> = {
+  happy: 'bg-green-100 text-green-800',
+  joyful: 'bg-green-100 text-green-800',
+  excited: 'bg-green-100 text-green-800',
+  content: 'bg-green-100 text-green-800',
+  
+  sad: 'bg-blue-100 text-blue-800',
+  melancholic: 'bg-blue-100 text-blue-800',
+  reflective: 'bg-blue-100 text-blue-800',
+  
+  anxious: 'bg-yellow-100 text-yellow-800',
+  worried: 'bg-yellow-100 text-yellow-800',
+  nervous: 'bg-yellow-100 text-yellow-800',
+  
+  curious: 'bg-purple-100 text-purple-800',
+  inquisitive: 'bg-purple-100 text-purple-800',
+  interested: 'bg-purple-100 text-purple-800',
+  
+  neutral: 'bg-slate-100 text-slate-800',
+  
+  angry: 'bg-red-100 text-red-800',
+  frustrated: 'bg-red-100 text-red-800',
+  
+  // Default
+  default: 'bg-amber-100 text-amber-800'
+};
+
+// Intent color mapping
+const intentColors: Record<string, string> = {
+  question: 'bg-blue-100 text-blue-800',
+  sharing: 'bg-green-100 text-green-800',
+  advice: 'bg-purple-100 text-purple-800',
+  responding: 'bg-amber-100 text-amber-800',
+  default: 'bg-slate-100 text-slate-800'
+};
+
 export function MessageDisplay({ message }: MessageDisplayProps) {
   const isUser = message.role === 'user';
+  
+  // Determine appropriate colors based on detected emotions
+  const emotionColor = message.emotionalTone ? 
+    (emotionColors[message.emotionalTone.toLowerCase()] || emotionColors.default) : 
+    emotionColors.default;
+    
+  const intentColor = message.intent ? 
+    (intentColors[message.intent.toLowerCase()] || intentColors.default) : 
+    intentColors.default;
   
   return (
     <motion.div 
@@ -22,7 +70,8 @@ export function MessageDisplay({ message }: MessageDisplayProps) {
       <div 
         className={cn(
           "w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0",
-          isUser ? "bg-teal-100" : "bg-amber-500"
+          isUser ? "bg-teal-100" : "bg-amber-500",
+          "shadow-sm"
         )}
       >
         {isUser ? (
@@ -34,17 +83,29 @@ export function MessageDisplay({ message }: MessageDisplayProps) {
       
       <div 
         className={cn(
-          "p-3 rounded-2xl max-w-3xl",
+          "p-4 rounded-2xl max-w-3xl shadow-sm",
           isUser 
             ? "bg-teal-50 text-slate-800 rounded-tr-none" 
             : "bg-amber-100/50 text-slate-800 rounded-tl-none"
         )}
       >
         <p className="whitespace-pre-wrap">{message.content}</p>
-        {message.emotionalTone && (
-          <div className="mt-1 text-xs text-slate-500">
-            <span className="mr-2">{message.emotionalTone}</span>
-            {message.intent && <span>{message.intent}</span>}
+        
+        {!isUser && message.emotionalTone && (
+          <div className="mt-2 flex flex-wrap gap-2 items-center text-xs">
+            {message.emotionalTone && (
+              <Badge variant="outline" className={cn("px-2 py-0.5 flex items-center gap-1", emotionColor)}>
+                <Heart className="h-3 w-3" />
+                <span>{message.emotionalTone}</span>
+              </Badge>
+            )}
+            
+            {message.intent && (
+              <Badge variant="outline" className={cn("px-2 py-0.5 flex items-center gap-1", intentColor)}>
+                <BrainCog className="h-3 w-3" />
+                <span>{message.intent}</span>
+              </Badge>
+            )}
           </div>
         )}
       </div>

@@ -17,8 +17,12 @@ export function Sidebar() {
   const suggestedTopics = [
     "Personal philosophy and values",
     "Creative inspirations and process",
-    "Thoughts on relationships and connection",
-    "Professional journey and growth"
+    "Thoughts on relationships and connection", 
+    "Professional journey and growth",
+    "Emotional milestones and lessons",
+    "Hopes and dreams for the future",
+    "Challenges I've overcome",
+    "What vulnerability means to me"
   ];
   
   return (
@@ -75,7 +79,17 @@ export function Sidebar() {
                 key={index}
                 variant="ghost"
                 className="w-full justify-start text-sm hover:bg-amber-100/30 h-auto py-2 px-3 mb-1 font-normal"
-                onClick={() => startNewConversation()}
+                onClick={() => {
+                  startNewConversation();
+                  // Use a small timeout to ensure the conversation view is loaded
+                  setTimeout(() => {
+                    // Create a custom event to set the message input
+                    const event = new CustomEvent('set-message-input', { 
+                      detail: { message: `I'd like to talk about "${topic}". What are your thoughts?` }
+                    });
+                    window.dispatchEvent(event);
+                  }, 100);
+                }}
               >
                 {topic}
               </Button>
