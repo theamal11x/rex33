@@ -123,7 +123,7 @@ export function MessageDisplay({ message }: MessageDisplayProps) {
   return (
     <motion.div 
       className={cn(
-        "flex items-start space-x-3",
+        "flex items-start gap-3",
         isUser && "justify-end flex-row-reverse"
       )}
       initial={{ opacity: 0, y: 10 }}
@@ -132,44 +132,50 @@ export function MessageDisplay({ message }: MessageDisplayProps) {
     >
       <div 
         className={cn(
-          "w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0",
-          isUser ? "bg-teal-100" : "bg-amber-500",
-          "shadow-sm"
+          "flex-shrink-0 rounded-full flex items-center justify-center shadow-md",
+          isUser 
+            ? "w-8 h-8 bg-gradient-to-br from-secondary to-blue-400" 
+            : "w-10 h-10 bg-gradient-to-br from-primary to-orange-400"
         )}
       >
         {isUser ? (
-          <span className="text-teal-700 font-medium text-xs">You</span>
+          <span className="text-white font-medium text-xs">You</span>
         ) : (
-          <span className="text-white font-['Caveat'] text-lg font-bold">R</span>
+          <span className="text-white font-display text-lg font-bold">R</span>
         )}
       </div>
       
       <div 
         className={cn(
-          "p-4 rounded-2xl max-w-3xl shadow-sm",
+          "p-4 rounded-xl max-w-3xl",
           isUser 
-            ? "bg-teal-50 text-slate-800 rounded-tr-none" 
-            : "bg-amber-100/50 text-slate-800 rounded-tl-none"
+            ? "glass-card bg-white/60 rounded-tr-none border-secondary-100" 
+            : "glass-card rounded-tl-none border-primary-100"
         )}
       >
-        <p className="whitespace-pre-wrap">{message.content}</p>
+        <p className="whitespace-pre-wrap text-slate-700 leading-relaxed">{message.content}</p>
         
-        {!isUser && message.emotionalTone && (
-          <div className="mt-2 flex flex-wrap gap-2 items-center text-xs">
+        {!isUser && (message.emotionalTone || message.intent) && (
+          <motion.div 
+            className="mt-3 flex flex-wrap gap-2 items-center text-xs"
+            initial={{ opacity: 0, y: 5 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3, duration: 0.2 }}
+          >
             {message.emotionalTone && (
-              <Badge variant="outline" className={cn("px-2 py-0.5 flex items-center gap-1", emotionColor)}>
+              <Badge variant="outline" className={cn("px-2 py-0.5 flex items-center gap-1 shadow-sm", emotionColor)}>
                 <Heart className="h-3 w-3" />
                 <span>{message.emotionalTone}</span>
               </Badge>
             )}
             
             {message.intent && (
-              <Badge variant="outline" className={cn("px-2 py-0.5 flex items-center gap-1", intentColor)}>
+              <Badge variant="outline" className={cn("px-2 py-0.5 flex items-center gap-1 shadow-sm", intentColor)}>
                 <BrainCog className="h-3 w-3" />
                 <span>{message.intent}</span>
               </Badge>
             )}
-          </div>
+          </motion.div>
         )}
       </div>
     </motion.div>
@@ -178,15 +184,51 @@ export function MessageDisplay({ message }: MessageDisplayProps) {
 
 export function TypingIndicator() {
   return (
-    <div className="flex items-start space-x-3 animate-fadeIn">
-      <div className="w-8 h-8 rounded-full bg-amber-500 flex items-center justify-center flex-shrink-0">
-        <span className="text-white font-['Caveat'] text-lg font-bold">R</span>
+    <div className="flex items-start gap-3 animate-fadeIn">
+      <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-orange-400 flex items-center justify-center flex-shrink-0 shadow-md">
+        <span className="text-white font-display text-lg font-bold">R</span>
       </div>
-      <div className="bg-amber-100/30 p-3 rounded-2xl rounded-tl-none">
-        <div className="flex space-x-1">
-          <span className="w-2 h-2 rounded-full bg-amber-500 animate-bounce" style={{ animationDelay: '0ms' }}></span>
-          <span className="w-2 h-2 rounded-full bg-amber-500 animate-bounce" style={{ animationDelay: '100ms' }}></span>
-          <span className="w-2 h-2 rounded-full bg-amber-500 animate-bounce" style={{ animationDelay: '200ms' }}></span>
+      <div className="glass-card p-3 rounded-2xl rounded-tl-none bg-white/50">
+        <div className="flex space-x-2">
+          <motion.span 
+            className="w-2.5 h-2.5 rounded-full bg-primary"
+            animate={{ 
+              scale: [0.7, 1.2, 0.7],
+              opacity: [0.5, 1, 0.5]
+            }}
+            transition={{
+              duration: 1.5,
+              repeat: Infinity,
+              ease: "easeInOut",
+              delay: 0
+            }}
+          />
+          <motion.span 
+            className="w-2.5 h-2.5 rounded-full bg-primary"
+            animate={{ 
+              scale: [0.7, 1.2, 0.7],
+              opacity: [0.5, 1, 0.5]
+            }}
+            transition={{
+              duration: 1.5,
+              repeat: Infinity,
+              ease: "easeInOut",
+              delay: 0.2
+            }}
+          />
+          <motion.span 
+            className="w-2.5 h-2.5 rounded-full bg-primary"
+            animate={{ 
+              scale: [0.7, 1.2, 0.7],
+              opacity: [0.5, 1, 0.5]
+            }}
+            transition={{
+              duration: 1.5,
+              repeat: Infinity,
+              ease: "easeInOut",
+              delay: 0.4
+            }}
+          />
         </div>
       </div>
     </div>

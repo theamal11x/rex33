@@ -1,12 +1,14 @@
 import { useState, FormEvent, KeyboardEvent, useEffect } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Layers } from 'lucide-react';
+import { SendIcon } from 'lucide-react';
 
 interface MessageInputProps {
   onSendMessage: (message: string) => void;
   disabled?: boolean;
   placeholder?: string;
+  value?: string;
+  onChange?: (value: string) => void;
 }
 
 // Define the custom event type
@@ -17,15 +19,29 @@ interface SetMessageInputEvent extends CustomEvent {
 export function MessageInput({ 
   onSendMessage, 
   disabled = false,
-  placeholder = "Ask me anything about Mohsin's thoughts or feelings..."
+  placeholder = "Ask me anything about Mohsin's thoughts or feelings...",
+  value,
+  onChange
 }: MessageInputProps) {
   const [message, setMessage] = useState('');
+  
+  // Controlled component logic
+  const isControlled = value !== undefined && onChange !== undefined;
+  const currentValue = isControlled ? value : message;
+  
+  const handleChange = (newValue: string) => {
+    if (isControlled) {
+      onChange(newValue);
+    } else {
+      setMessage(newValue);
+    }
+  };
 
   // Listen for the custom event from sidebar suggested topics
   useEffect(() => {
     const handleSetMessage = (event: Event) => {
       const customEvent = event as SetMessageInputEvent;
-      setMessage(customEvent.detail.message);
+      handleChange(customEvent.detail.message);
     };
 
     window.addEventListener('set-message-input', handleSetMessage);
@@ -33,13 +49,13 @@ export function MessageInput({
     return () => {
       window.removeEventListener('set-message-input', handleSetMessage);
     };
-  }, []);
+  }, [isControlled, onChange]);
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    if (message.trim() && !disabled) {
-      onSendMessage(message.trim());
-      setMessage('');
+    if (currentValue.trim() && !disabled) {
+      onSendMessage(currentValue.trim());
+      handleChange('');
     }
   };
 
@@ -51,23 +67,23 @@ export function MessageInput({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex space-x-3">
-      <div className="flex-1">
+    <form onSubmit={handleSubmit} className="flex space-x-3 w-full">
+      <div className="flex-1 relative">
         <Input
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
+          value={currentValue}
+          onChange={(e) => handleChange(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder={placeholder}
           disabled={disabled}
-          className="w-full px-4 py-3 rounded-full bg-white border border-amber-300/30 focus:border-amber-500 focus:ring-1 focus:ring-amber-500 focus:outline-none text-slate-800 placeholder:text-slate-500/50 h-12"
+          className="w-full px-4 py-3 rounded-full glass-input shadow-sm border-primary-100 focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none text-slate-800 placeholder:text-slate-400/70 h-12"
         />
       </div>
       <Button 
         type="submit" 
-        disabled={disabled || !message.trim()} 
-        className="bg-amber-500 hover:bg-amber-600 text-white px-5 py-3 rounded-full flex items-center justify-center transition-colors h-12 w-12"
+        disabled={disabled || !currentValue.trim()} 
+        className="bg-gradient-to-r from-primary to-primary-400 hover:from-primary-600 hover:to-primary-500 text-white px-5 py-3 rounded-full flex items-center justify-center transition-all h-12 w-12 shadow-glow disabled:opacity-50 disabled:shadow-none"
       >
-        <Layers className="h-5 w-5" />
+        <SendIcon className="h-5 w-5" />
       </Button>
     </form>
   );
