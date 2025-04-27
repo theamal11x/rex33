@@ -11,9 +11,9 @@ export interface GeminiAnalysisResult {
 
 export async function analyzeMessage(message: string): Promise<GeminiAnalysisResult> {
   try {
-    // Use the gemini-1.0-pro model - updated model name
+    // Use the gemini-2.0-flash model - updated model name
     const model = genAI.getGenerativeModel({
-      model: "gemini-1.0-pro",
+      model: "gemini-2.0-flash",
       safetySettings: [
         {
           category: HarmCategory.HARM_CATEGORY_HATE_SPEECH,
