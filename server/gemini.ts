@@ -1,4 +1,5 @@
 import { GoogleGenerativeAI, HarmCategory, HarmBlockThreshold } from '@google/generative-ai';
+import { storage } from './storage';
 
 // Initialize the Google Gemini API client
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_GEMINI_API_KEY as string);
@@ -42,6 +43,28 @@ export async function analyzeMessageWithGemini(message: string, conversationCont
     // Add Mohsin's content as reference material
     if (mohsinContent) {
       prompt += `\n\nREFERENCE MATERIAL FROM MOHSIN'S WRITING:\n${mohsinContent}\n\nUse this content to inform your responses, incorporating Mohsin's thoughts, feelings, and writing style when appropriate.\n`;
+    }
+    
+    // Get active AI guidelines
+    try {
+      const activeGuidelines = await storage.getActiveAiGuidelines();
+      
+      if (activeGuidelines.length > 0) {
+        prompt += `\n\nADDITIONAL RESPONSE GUIDELINES TO FOLLOW:\n`;
+        
+        // Sort guidelines by priority (highest first)
+        const sortedGuidelines = [...activeGuidelines].sort((a, b) => b.priority - a.priority);
+        
+        // Add each guideline to the prompt
+        sortedGuidelines.forEach(guideline => {
+          prompt += `- ${guideline.content}\n`;
+        });
+        
+        prompt += `\nThese guidelines are important rules for how you should respond. Follow them carefully.\n`;
+      }
+    } catch (error) {
+      console.error("Error fetching AI guidelines:", error);
+      // Continue even if we can't get guidelines
     }
 
     prompt += `

@@ -4,7 +4,13 @@ import { storage } from "./storage";
 import { setupAuth } from "./auth";
 import { z } from "zod";
 import { nanoid } from "nanoid";
-import { contentStatusEnum, categoryEnum, insertCategorySchema, insertContentEntrySchema } from "@shared/schema";
+import { 
+  contentStatusEnum, 
+  categoryEnum, 
+  insertCategorySchema, 
+  insertContentEntrySchema,
+  insertAiGuidelineSchema
+} from "@shared/schema";
 
 async function getOrCreateConversation(sessionId: string) {
   let conversation = await storage.getConversationBySessionId(sessionId);
@@ -293,6 +299,87 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json(emotionalData);
     } catch (error) {
       res.status(500).json({ message: 'Failed to fetch emotional journey data' });
+    }
+  });
+  
+  // AI Guidelines Routes
+  app.get('/api/ai-guidelines', requireAdmin, async (req, res) => {
+    try {
+      const guidelines = await storage.getAiGuidelines();
+      res.json(guidelines);
+    } catch (error) {
+      res.status(500).json({ message: 'Failed to fetch AI guidelines' });
+    }
+  });
+  
+  app.get('/api/ai-guidelines/active', async (req, res) => {
+    try {
+      const guidelines = await storage.getActiveAiGuidelines();
+      res.json(guidelines);
+    } catch (error) {
+      res.status(500).json({ message: 'Failed to fetch active AI guidelines' });
+    }
+  });
+  
+  app.get('/api/ai-guidelines/:id', requireAdmin, async (req, res) => {
+    try {
+      const { id } = req.params;
+      const guideline = await storage.getAiGuideline(Number(id));
+      
+      if (!guideline) {
+        return res.status(404).json({ message: 'AI guideline not found' });
+      }
+      
+      res.json(guideline);
+    } catch (error) {
+      res.status(500).json({ message: 'Failed to fetch AI guideline' });
+    }
+  });
+  
+  app.post('/api/ai-guidelines', requireAdmin, async (req, res) => {
+    try {
+      const guidelineData = insertAiGuidelineSchema.parse(req.body);
+      const guideline = await storage.createAiGuideline(guidelineData);
+      res.status(201).json(guideline);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: 'Invalid guideline data', errors: error.errors });
+      }
+      res.status(500).json({ message: 'Failed to create AI guideline' });
+    }
+  });
+  
+  app.put('/api/ai-guidelines/:id', requireAdmin, async (req, res) => {
+    try {
+      const { id } = req.params;
+      const validatedData = insertAiGuidelineSchema.partial().parse(req.body);
+      const guideline = await storage.updateAiGuideline(Number(id), validatedData);
+      
+      if (!guideline) {
+        return res.status(404).json({ message: 'AI guideline not found' });
+      }
+      
+      res.json(guideline);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: 'Invalid guideline data', errors: error.errors });
+      }
+      res.status(500).json({ message: 'Failed to update AI guideline' });
+    }
+  });
+  
+  app.delete('/api/ai-guidelines/:id', requireAdmin, async (req, res) => {
+    try {
+      const { id } = req.params;
+      const success = await storage.deleteAiGuideline(Number(id));
+      
+      if (!success) {
+        return res.status(404).json({ message: 'AI guideline not found or could not be deleted' });
+      }
+      
+      res.status(204).end();
+    } catch (error) {
+      res.status(500).json({ message: 'Failed to delete AI guideline' });
     }
   });
 
