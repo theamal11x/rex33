@@ -8,6 +8,7 @@ import HomePage from "@/pages/home-page";
 import AdminPage from "@/pages/admin-page";
 import { AppProvider } from "./context/app-context";
 import { SplashScreen } from "@/components/splash-screen";
+import { EmotionalBackground } from "@/components/emotional-background";
 
 function Router() {
   return (
@@ -24,6 +25,7 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <AppProvider>
         <TooltipProvider>
+          <EmotionalBackground />
           <SplashScreen />
           <Toaster />
           <Router />
