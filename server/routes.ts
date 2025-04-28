@@ -112,9 +112,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       // Filter out draft content for non-admin users
       const isAdmin = req.isAuthenticated() && req.user?.isAdmin;
+      
+      console.log('Content request - Auth status:', req.isAuthenticated());
+      console.log('Content request - User is admin:', isAdmin);
+      
       const filteredEntries = isAdmin 
         ? entries 
         : entries.filter(entry => entry.status !== 'draft');
+      
+      console.log(`Content entries before filtering: ${entries.length}, after filtering: ${filteredEntries.length}`);
       
       res.json(filteredEntries);
     } catch (error) {
@@ -129,9 +135,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       // Filter out draft content for non-admin users
       const isAdmin = req.isAuthenticated() && req.user?.isAdmin;
+      
+      console.log('Category content request - Auth status:', req.isAuthenticated());
+      console.log('Category content request - User is admin:', isAdmin);
+      
       const filteredEntries = isAdmin 
         ? entries 
         : entries.filter(entry => entry.status !== 'draft');
+      
+      console.log(`Category ${categoryId} entries before filtering: ${entries.length}, after filtering: ${filteredEntries.length}`);
+      console.log('Entries statuses:', entries.map(e => e.status).join(', '));
       
       res.json(filteredEntries);
     } catch (error) {
