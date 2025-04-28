@@ -310,7 +310,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       // Enhance with message counts
       const enhancedConversations = await Promise.all(
-        conversations.map(async (conversation) => {
+        conversations.map(async (conversation: Conversation) => {
           const messages = await storage.getMessages(conversation.id);
           
           // Get the last message for preview
@@ -328,7 +328,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       );
       
       // Sort by last activity (most recent first)
-      enhancedConversations.sort((a, b) => 
+      enhancedConversations.sort((a: any, b: any) => 
         new Date(b.lastActivity).getTime() - new Date(a.lastActivity).getTime()
       );
       

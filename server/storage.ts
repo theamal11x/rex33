@@ -28,6 +28,9 @@ import { pool } from "./db";
 
 const PostgresSessionStore = connectPg(session);
 
+// Define a type for session store
+type SessionStore = session.Store;
+
 export interface IStorage {
   // User management
   getUser(id: number): Promise<User | undefined>;
@@ -51,6 +54,7 @@ export interface IStorage {
   deleteContentEntry(id: number): Promise<boolean>;
   
   // Conversation management
+  getConversations(): Promise<Conversation[]>;
   createConversation(conversation: InsertConversation): Promise<Conversation>;
   getConversation(id: number): Promise<Conversation | undefined>;
   getConversationBySessionId(sessionId: string): Promise<Conversation | undefined>;
@@ -68,11 +72,11 @@ export interface IStorage {
   deleteAiGuideline(id: number): Promise<boolean>;
   
   // Session store for authentication
-  sessionStore: session.SessionStore;
+  sessionStore: SessionStore;
 }
 
 export class DatabaseStorage implements IStorage {
-  sessionStore: session.SessionStore;
+  sessionStore: SessionStore;
   
   constructor() {
     this.sessionStore = new PostgresSessionStore({ 
@@ -188,6 +192,10 @@ export class DatabaseStorage implements IStorage {
   }
   
   // Conversation management
+  async getConversations(): Promise<Conversation[]> {
+    return await db.select().from(conversations);
+  }
+  
   async createConversation(insertConversation: InsertConversation): Promise<Conversation> {
     const [conversation] = await db.insert(conversations).values(insertConversation).returning();
     return conversation;
