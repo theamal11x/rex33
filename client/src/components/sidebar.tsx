@@ -22,8 +22,9 @@ export function Sidebar() {
   };
   
   const handleCategoryClick = (categoryId: number) => {
-    setView('archive');
     setSelectedCategoryId(categoryId);
+    // Note: We don't need to set view to 'archive' as our modified setView function would ignore it
+    // and the user will stay in the conversation view
   };
   
   const suggestedTopics = [
@@ -85,16 +86,6 @@ export function Sidebar() {
             <CardContent className="p-3">
               <motion.div whileHover={{ x: 3 }} transition={{ duration: 0.2 }}>
                 <Button
-                  onClick={handleViewArchive}
-                  variant="ghost"
-                  className="w-full justify-start text-sm hover:bg-amber-100/60 hover:text-amber-900 h-10 px-3 mb-1 transition-all duration-200"
-                >
-                  <BookIcon className="h-4 w-4 mr-3 text-amber-500" />
-                  <span>Browse Reflection Archive</span>
-                </Button>
-              </motion.div>
-              <motion.div whileHover={{ x: 3 }} transition={{ duration: 0.2 }}>
-                <Button
                   onClick={handleStartNewConversation}
                   variant="ghost"
                   className="w-full justify-start text-sm hover:bg-amber-100/60 hover:text-amber-900 h-10 px-3 transition-all duration-200"
@@ -106,46 +97,6 @@ export function Sidebar() {
             </CardContent>
           </Card>
         </motion.div>
-        
-        {/* Categories */}
-        {categories && categories.length > 0 && (
-          <motion.div
-            initial={{ y: 20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.5, delay: 1.0 }}
-          >
-            <Card className="border border-amber-200/60 shadow-md bg-amber-50/30 backdrop-blur-sm">
-              <CardHeader className="bg-gradient-to-r from-amber-100 to-amber-50 pb-2 pt-4 border-b border-amber-200/50">
-                <CardTitle className="text-base font-medium flex items-center">
-                  <FolderIcon className="w-4 h-4 mr-2 text-amber-500" />
-                  Content Categories
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="p-3">
-                {categories.map((category, idx) => (
-                  <motion.div 
-                    key={category.id} 
-                    whileHover={{ x: 3 }} 
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.3, delay: 1.0 + (idx * 0.05) }}
-                  >
-                    <Button
-                      variant="ghost"
-                      className={`w-full justify-start text-sm hover:bg-amber-100/60 hover:text-amber-900 h-auto py-2 px-3 mb-1 font-normal transition-all duration-200 ${
-                        selectedCategoryId === category.id ? 'bg-amber-100/70 text-amber-900 font-medium' : ''
-                      }`}
-                      onClick={() => handleCategoryClick(category.id)}
-                    >
-                      <FolderIcon className="h-4 w-4 mr-2 text-amber-500 flex-shrink-0" />
-                      <span className="truncate">{category.name}</span>
-                    </Button>
-                  </motion.div>
-                ))}
-              </CardContent>
-            </Card>
-          </motion.div>
-        )}
         
         {/* Suggested Topics */}
         <motion.div

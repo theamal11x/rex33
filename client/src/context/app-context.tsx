@@ -22,13 +22,23 @@ interface AppContextType {
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export function AppProvider({ children }: { children: ReactNode }) {
-  const [view, setView] = useState<'conversation' | 'archive' | 'admin' | 'adminLogin'>('conversation');
+  const [view, setViewInternal] = useState<'conversation' | 'archive' | 'admin' | 'adminLogin'>('conversation');
   const [sessionId, setSessionId] = useState(() => nanoid());
   const [messages, setMessages] = useState<Message[]>([]);
   const [isTyping, setIsTyping] = useState(false);
   const [categories, setCategories] = useState<Category[]>([]);
   const [contentEntries, setContentEntries] = useState<ContentEntry[]>([]);
   const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(null);
+  
+  // Custom setView function to prevent navigating to 'archive' view
+  const setView = (newView: 'conversation' | 'archive' | 'admin' | 'adminLogin') => {
+    // Prevent navigating to archive, stay in conversation view
+    if (newView === 'archive') {
+      setViewInternal('conversation');
+    } else {
+      setViewInternal(newView);
+    }
+  };
   
   const { toast } = useToast();
 
