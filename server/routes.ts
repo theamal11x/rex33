@@ -109,20 +109,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get('/api/content', async (req, res) => {
     try {
       const entries = await storage.getContentEntries();
-      
-      // Filter out draft content for non-admin users
-      const isAdmin = req.isAuthenticated() && req.user?.isAdmin;
-      
-      console.log('Content request - Auth status:', req.isAuthenticated());
-      console.log('Content request - User is admin:', isAdmin);
-      
-      const filteredEntries = isAdmin 
-        ? entries 
-        : entries.filter(entry => entry.status !== 'draft');
-      
-      console.log(`Content entries before filtering: ${entries.length}, after filtering: ${filteredEntries.length}`);
-      
-      res.json(filteredEntries);
+      res.json(entries);
     } catch (error) {
       res.status(500).json({ message: 'Failed to fetch content entries' });
     }
@@ -132,21 +119,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const categoryId = parseInt(req.params.categoryId);
       const entries = await storage.getContentEntriesByCategory(categoryId);
-      
-      // Filter out draft content for non-admin users
-      const isAdmin = req.isAuthenticated() && req.user?.isAdmin;
-      
-      console.log('Category content request - Auth status:', req.isAuthenticated());
-      console.log('Category content request - User is admin:', isAdmin);
-      
-      const filteredEntries = isAdmin 
-        ? entries 
-        : entries.filter(entry => entry.status !== 'draft');
-      
-      console.log(`Category ${categoryId} entries before filtering: ${entries.length}, after filtering: ${filteredEntries.length}`);
-      console.log('Entries statuses:', entries.map(e => e.status).join(', '));
-      
-      res.json(filteredEntries);
+      res.json(entries);
     } catch (error) {
       res.status(500).json({ message: 'Failed to fetch content entries' });
     }
@@ -158,12 +131,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const entry = await storage.getContentEntry(id);
       
       if (!entry) {
-        return res.status(404).json({ message: 'Content entry not found' });
-      }
-      
-      // Don't allow non-admin users to see draft content entries
-      const isAdmin = req.isAuthenticated() && req.user?.isAdmin;
-      if (!isAdmin && entry.status === 'draft') {
         return res.status(404).json({ message: 'Content entry not found' });
       }
       
