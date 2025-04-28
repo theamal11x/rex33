@@ -109,7 +109,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get('/api/content', async (req, res) => {
     try {
       const entries = await storage.getContentEntries();
-      res.json(entries);
+      
+      // Filter out draft content for non-admin users
+      const isAdmin = req.isAuthenticated() && req.user?.isAdmin;
+      const filteredEntries = isAdmin 
+        ? entries 
+        : entries.filter(entry => entry.status !== 'draft');
+      
+      res.json(filteredEntries);
     } catch (error) {
       res.status(500).json({ message: 'Failed to fetch content entries' });
     }
@@ -119,7 +126,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const categoryId = parseInt(req.params.categoryId);
       const entries = await storage.getContentEntriesByCategory(categoryId);
-      res.json(entries);
+      
+      // Filter out draft content for non-admin users
+      const isAdmin = req.isAuthenticated() && req.user?.isAdmin;
+      const filteredEntries = isAdmin 
+        ? entries 
+        : entries.filter(entry => entry.status !== 'draft');
+      
+      res.json(filteredEntries);
     } catch (error) {
       res.status(500).json({ message: 'Failed to fetch content entries' });
     }
@@ -131,6 +145,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const entry = await storage.getContentEntry(id);
       
       if (!entry) {
+        return res.status(404).json({ message: 'Content entry not found' });
+      }
+      
+      // Don't allow non-admin users to see draft content entries
+      const isAdmin = req.isAuthenticated() && req.user?.isAdmin;
+      if (!isAdmin && entry.status === 'draft') {
         return res.status(404).json({ message: 'Content entry not found' });
       }
       
