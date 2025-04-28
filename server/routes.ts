@@ -9,7 +9,8 @@ import {
   categoryEnum, 
   insertCategorySchema, 
   insertContentEntrySchema,
-  insertAiGuidelineSchema
+  insertAiGuidelineSchema,
+  type Conversation
 } from "@shared/schema";
 
 async function getOrCreateConversation(sessionId: string) {
