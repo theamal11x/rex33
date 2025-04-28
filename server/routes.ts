@@ -302,6 +302,88 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
+  // Admin Conversations API
+  app.get('/api/admin/conversations', requireAdmin, async (req, res) => {
+    try {
+      // Fetch all conversations
+      const conversations = await storage.getConversations();
+      
+      // Enhance with message counts
+      const enhancedConversations = await Promise.all(
+        conversations.map(async (conversation) => {
+          const messages = await storage.getMessages(conversation.id);
+          
+          // Get the last message for preview
+          const lastMessage = messages.length > 0 
+            ? messages[messages.length - 1].content.substring(0, 60) + (messages[messages.length - 1].content.length > 60 ? '...' : '') 
+            : null;
+          
+          return {
+            ...conversation,
+            messageCount: messages.length,
+            lastMessage,
+            lastActivity: messages.length > 0 ? messages[messages.length - 1].createdAt : conversation.createdAt
+          };
+        })
+      );
+      
+      // Sort by last activity (most recent first)
+      enhancedConversations.sort((a, b) => 
+        new Date(b.lastActivity).getTime() - new Date(a.lastActivity).getTime()
+      );
+      
+      res.json(enhancedConversations);
+    } catch (error) {
+      console.error('Error fetching conversations:', error);
+      res.status(500).json({ message: 'Failed to fetch conversations' });
+    }
+  });
+  
+  // Generate a conversation summary using Gemini
+  app.post('/api/admin/conversations/:id/summary', requireAdmin, async (req, res) => {
+    try {
+      const conversationId = parseInt(req.params.id);
+      const conversation = await storage.getConversation(conversationId);
+      
+      if (!conversation) {
+        return res.status(404).json({ message: 'Conversation not found' });
+      }
+      
+      // Get all messages for this conversation
+      const messages = await storage.getMessages(conversationId);
+      
+      if (messages.length === 0) {
+        return res.json({ summary: "No messages in this conversation to summarize." });
+      }
+      
+      // Format conversation for the AI
+      const conversationText = messages.map(msg => 
+        `${msg.role === 'user' ? 'User' : 'Rex'}: ${msg.content}`
+      ).join('\n\n');
+      
+      // Import the Gemini integration
+      const { analyzeMessageWithGemini } = await import('./gemini');
+      
+      // Use Gemini to generate a summary
+      const summaryPrompt = `Please summarize the following conversation between a user and Rex (an AI). Identify main topics discussed, questions asked, and key responses given. The summary should be concise but comprehensive.
+
+Conversation:
+${conversationText}
+
+Generate a summary of the conversation with key topics and themes.`;
+
+      const geminiResponse = await analyzeMessageWithGemini(summaryPrompt);
+      
+      // Extract the summary from the response
+      const summary = geminiResponse.response;
+      
+      res.json({ summary });
+    } catch (error) {
+      console.error('Error generating conversation summary:', error);
+      res.status(500).json({ message: 'Failed to generate conversation summary' });
+    }
+  });
+  
   // AI Guidelines Routes
   app.get('/api/ai-guidelines', requireAdmin, async (req, res) => {
     try {

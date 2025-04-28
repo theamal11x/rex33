@@ -13,6 +13,7 @@ import { useLocation } from 'wouter';
 import { apiRequest, queryClient } from '@/lib/queryClient';
 import { PenIcon, PlusIcon, TrashIcon, ArrowLeftIcon, Sliders } from 'lucide-react';
 import { AiGuidelinesManager } from './ai-guidelines-manager';
+import { ConversationsManager } from './conversations-manager';
 import { format } from 'date-fns';
 import {
   Dialog,
@@ -305,6 +306,12 @@ export function AdminView() {
                   AI Guidelines
                 </TabsTrigger>
                 <TabsTrigger 
+                  value="conversations" 
+                  className="px-4 py-3 text-sm font-medium data-[state=active]:border-b-2 data-[state=active]:border-teal-600 data-[state=active]:text-teal-600 rounded-none"
+                >
+                  Conversations
+                </TabsTrigger>
+                <TabsTrigger 
                   value="settings" 
                   className="px-4 py-3 text-sm font-medium data-[state=active]:border-b-2 data-[state=active]:border-teal-600 data-[state=active]:text-teal-600 rounded-none"
                 >
@@ -456,6 +463,11 @@ export function AdminView() {
             {/* AI Guidelines Management */}
             <TabsContent value="ai-guidelines" className="p-6 m-0">
               <AiGuidelinesManager />
+            </TabsContent>
+            
+            {/* Conversations Management */}
+            <TabsContent value="conversations" className="p-6 m-0">
+              <ConversationsManager />
             </TabsContent>
             
             {/* Settings */}
